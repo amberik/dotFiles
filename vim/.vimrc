@@ -76,6 +76,7 @@ set smarttab
 "" Vundle settings
 "=====================================================
 "" set the runtime path to include Vundle and initialize
+set rtp+=~/dotFiles/vim/
 set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/.vim/bundle/vim-airline-themes/
 call vundle#begin()
@@ -96,20 +97,20 @@ call vundle#begin()
     Plugin 'bling/vim-airline'              " Lean & mean status/tabline for vim
     Plugin 'fisadev/FixedTaskList.vim'      " Pending tasks list
     Plugin 'rosenfeld/conque-term'          " Consoles as buffers
-    "Plugin 'tpope/vim-surround'     " Parentheses, brackets, quotes, XML tags, and more
+    "Plugin 'tpope/vim-surround'            " Parentheses, brackets, quotes, XML tags, and more
 
     "--------------=== Snippets support ===---------------
-    Plugin 'garbas/vim-snipmate'       " Snippets manager
-    Plugin 'MarcWeber/vim-addon-mw-utils'  " dependencies #1
-    Plugin 'tomtom/tlib_vim'       " dependencies #2
-    Plugin 'honza/vim-snippets'        " snippets repo
+    Plugin 'garbas/vim-snipmate'            " Snippets manager
+    Plugin 'MarcWeber/vim-addon-mw-utils'   " dependencies #1
+    Plugin 'tomtom/tlib_vim'                " dependencies #2
+    Plugin 'honza/vim-snippets'             " snippets repo
     "
     ""---------------=== Languages support ===-------------
     " --- Python ---
-    Plugin 'klen/python-mode'            " Python mode (docs, refactor,
-    "  lints, highlighting, run and ipdb and more)
-    Plugin 'davidhalter/jedi-vim'        " Jedi-vim autocomplete plugin
-    Plugin 'mitsuhiko/vim-jinja'     " Jinja support for vim
+    Plugin 'klen/python-mode'               " Python mode (docs, refactor,
+                                            "  lints, highlighting, run and ipdb and more)
+    Plugin 'davidhalter/jedi-vim'           " Jedi-vim autocomplete plugin
+    Plugin 'mitsuhiko/vim-jinja'            " Jinja support for vim
     Plugin 'mitsuhiko/vim-python-combined'  " Combined Python 2/3 for Vim
 
 call vundle#end()                    " required
@@ -118,7 +119,7 @@ filetype on
 filetype plugin on
 filetype plugin indent on
 
-colorscheme fu
+colorscheme fu_ex
 
 
 " disable tabs replacement for the specified filetypes
