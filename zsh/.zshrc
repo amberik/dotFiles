@@ -23,6 +23,9 @@ HISTSIZE=10000
 SAVEHIST=10000                                                               
 HISTFILE=~/.zsh_history                                                      
 
+export VISUAL=vim
+export EDITOR="$VISUAL"
+
 source ~/antigen.zsh
 # Load the oh-my-zsh's library.
 antigen use oh-my-zsh
