@@ -13,3 +13,5 @@
    `$ echo "source ~/dotFiles/zsh/.zshrc" > ~/.zshrc`
 
    `$ echo "source-file ~/dotFiles/tmux/.tmux.conf" > ./.tmux.conf`
+   
+   `$ ln ~/dotFiles/git/.gitconfig ~/.gitconfig`
