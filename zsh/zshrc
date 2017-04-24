@@ -49,7 +49,6 @@ alias l='ls -lah'
 alias grep='grep --color -n'                                             
 alias df='df -h'
 alias ssh='TERM=xterm ssh'
-alias vim='vim -u ~/dotFiles/vim/.vimrc'
 
 # Use modern completion system                                                                        
 autoload -Uz compinit                                                                                 
