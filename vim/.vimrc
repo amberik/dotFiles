@@ -242,7 +242,7 @@ let g:pymode_doc_bind = ''
 " JEDI settings
 " ------------------------------------------------------------------------------
 let g:jedi#popup_select_first = 1
-let g:jedi#show_call_signatures = 1
+let g:jedi#show_call_signatures = 0
 let g:jedi#auto_close_doc = 1
 set splitbelow
 let g:jedi#goto_command = '<leader>d'
@@ -251,6 +251,22 @@ let g:jedi#goto_command = '<leader>d'
 " This function finds the first definition of the function/class under the
 " cursor. It produces an error if the definition is not in a Python file.
 let g:jedi#goto_assignments_command = '<leader>g'
+
+function! jedi#add_goto_window(len) abort
+    set lazyredraw
+    cclose
+    let height = g:jedi#quickfix_window_height
+    execute 'belowright copen '.height
+    set nolazyredraw
+    if g:jedi#use_tabs_not_buffers == 1
+        noremap <buffer> <CR> :call jedi#goto_window_on_enter()<CR>
+    endif
+    augroup jedi_goto_window
+      au!
+      au WinLeave <buffer> q  " automatically leave, if an option is chosen
+    augroup END
+    redraw!
+endfunction
 
 "------------------------------------------------------------------------------
 "This shows the pydoc documentation for the item currently under the cursor.
@@ -409,6 +425,7 @@ map <silent> <F2>       :NERDTreeToggle<cr>
 imap <silent> <F2>      <ESC>:NERDTreeToggle<cr>
 "Open/close the list of opened buffers
 map <silent> <F3>       :BufExplorer<cr>
+imap <silent> <F3>      <ESC>:BufExplorer<cr>
 "Open/clode the list of Tags in the current buffer
 map <silent> <F4>       :TagbarToggle <CR>
 
@@ -420,10 +437,12 @@ nnoremap <F5> :ConqueTermSplit ipython<CR>
 nnoremap <F6> :exe "ConqueTermSplit ipython " . expand("%")<CR>
 
 "On/Off spell check
-noremap <F7>            :set spell! spell?<CR> 
+nnoremap <F7>            :set spell! spell?<CR> 
+inoremap <F7>            <ESC>:set spell! spell?<CR>i
 
 "On/off higlight of serach results
-noremap <F8>            :set hlsearch! hlsearch?<CR>
+nnoremap <f8>            :set hlsearch! hlsearch?<cr>
+inoremap <f8>           <ESC>:set hlsearch! hlsearch?<cr>i
 
 "build of cscope DB
 map <silent> <F11>  :cs reset <CR> 

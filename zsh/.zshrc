@@ -23,7 +23,7 @@ HISTSIZE=10000
 SAVEHIST=10000                                                               
 HISTFILE=~/.zsh_history                                                      
 
-export VISUAL=vim
+export VISUAL='vim -u ~/dotFiles/vim/.vimrc' 
 export EDITOR="$VISUAL"
 
 source ~/antigen.zsh
