@@ -32,7 +32,7 @@ hi clear
 if exists("syntax_on")
   syntax reset
 endif
-let colors_name = "fu"
+let colors_name = "fu_ex"
 
 
 " General colors
