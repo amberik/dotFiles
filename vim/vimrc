@@ -320,15 +320,16 @@ map! <M-j> <Left>
 map! <M-k> <Down>
 map! <M-l> <Right>
 
-noremap  <PageUp>
-noremap  b
-noremap  <PageDown>
-noremap  w
+noremap I <PageUp>
+noremap J b
+noremap K <PageDown>
+noremap L w
 
-noremap!  <C-o><PageUp>
-noremap!  <C-o>b
-noremap!  <C-o><PageDown>
-noremap!  <C-o>w
+noremap! I <PageUp>
+noremap! J <C-o>b
+noremap! K <PageDown>
+noremap! L <C-o>w
+
 " Edit keys
 " Copy
 vmap <M-u> yi
@@ -355,8 +356,8 @@ imap <M-n> <C-x>s
 " Select modes
 nnoremap <M-h> i
 " To Normal mode
-vnoremap <M-h> <ESC>
-noremap! <M-h> <ESC>
+vnoremap w <ESC>
+noremap! w <ESC>
 " To Visual mode
 function! ChangeVisualModInLoop()
     let l:current_mode = mode()
@@ -373,7 +374,7 @@ function! ChangeVisualModInLoop()
         let l:next_mode = ''
     endif
     if 'i' == l:current_mode
-        let l:next_mode = "\<ESC>V"
+        let l:next_mode = "\<ESC>\<Right>V"
     endif
     if 'n' == l:current_mode
         let l:next_mode = 'V'
@@ -396,19 +397,21 @@ nmap <silent> _ <C-W>-
 "navigation between panels
 imap <silent> <C-W>         <C-o><C-w>
 
-nnoremap <silent> <C-w>j     :wincmd h <CR>
-nnoremap <silent> <C-w>l     :wincmd l <CR>
-nnoremap <silent> <C-w>i     :wincmd k <CR>
-nnoremap <silent> <C-w>k     :wincmd j <CR>
-nnoremap <silent> <M-w>s     :wincmd s <CR>
-nnoremap <silent> <M-w>v     :wincmd v <CR>
+inoremap <silent> wj   <ESC> :wincmd h <CR>i
+inoremap <silent> wl   <ESC> :wincmd l <CR>i
+inoremap <silent> wi   <ESC> :wincmd k <CR>i
+inoremap <silent> wk   <ESC> :wincmd j <CR>i
+inoremap <silent> ws   <ESC> :wincmd s <CR>i
+inoremap <silent> wv   <ESC> :wincmd v <CR>i
+inoremap <silent> wq   <C-o><C-w>q
 
-nnoremap <silent> <M-w>j    <C-o> :wincmd h <CR>
-nnoremap <silent> <M-w>l    <C-o> :wincmd l <CR>
-nnoremap <silent> <M-w>i    <C-o> :wincmd k <CR>
-nnoremap <silent> <M-w>k    <C-o> :wincmd j <CR>
-nnoremap <silent> <M-w>s    <C-o> :wincmd s <CR>
-nnoremap <silent> <M-w>v    <C-o> :wincmd v <CR>
+nnoremap <silent> wj    :wincmd h <CR>
+nnoremap <silent> wl    :wincmd l <CR>
+nnoremap <silent> wi    :wincmd k <CR>
+nnoremap <silent> wk    :wincmd j <CR>
+nnoremap <silent> ws    :wincmd s <CR>
+nnoremap <silent> wv    :wincmd v <CR>
+nnoremap <silent> wq    <C-w>q
 
 vmap <silent> <C-W><Up>     <C-W><Up>
 vmap <silent> <C-W><Down>   <C-W><Down>
@@ -426,6 +429,10 @@ map <silent> <F3>       :BufExplorer<cr>
 imap <silent> <F3>      <ESC>:BufExplorer<cr>
 "Open/clode the list of Tags in the current buffer
 map <silent> <F4>       :TagbarToggle <CR>
+"Paste mode
+nnoremap <M-p> :set invpaste paste?<CR>
+set pastetoggle=<M-p>
+set showmode
 
 " Key for manual check of python code
 autocmd FileType python map <silent> <buffer> <leader>c :PymodeLint<CR>
@@ -447,8 +454,8 @@ map <silent> <F11>  :cs reset <CR>
 map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.sh -f ../cscope.paths & <CR>
 
 "save file
-nmap <silent> <C-s>     :w! <CR>
-imap <silent> <C-s>     <ESC>:w! <CR>i
+nmap <silent> <M-s>     :w! <CR>
+imap <silent> <M-s>     <ESC>:w! <CR>i
 imap <silent> <Insert>  <ESC>
 
 "**********************************************************************************************************************

@@ -59,10 +59,10 @@ autoload -Uz compinit
 #   keys.
 bindkey "^[l" forward-char
 bindkey "^[j" backward-char
-bindkey "^[i" up-line-or-history
-bindkey "^[k" down-line-or-history
+bindkey "^[i" up-line-or-search
+bindkey "^[k" down-line-or-search
 bindkey "^[L" forward-word
 bindkey "^[J" backward-word
 bindkey "^[f" delete-char
-bindkey "^[d" backward-delete-charcompinit                                                                                              
+bindkey "^[d" backward-delete-char                                                           
 
