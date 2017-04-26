@@ -14,6 +14,8 @@ updateConfigFile ./zsh/zshrc ~/.zshrc
 updateConfigFile ./tmux/tmux.conf ~/.tmux.conf
 updateConfigFile ./vim/vimrc  ~/.vimrc
 updateConfigFile ./git/gitconfig ~/.gitconfig
+ln -s ~/.vim ~/.config/nvim
+updateConfigFile ./vim/vimrc ~/.config/nvim/init.vim
 
 if [ !  ~/antigen.zsh ] 
 then

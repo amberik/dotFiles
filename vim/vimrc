@@ -30,9 +30,10 @@ set showmode
 
 " changes special characters in search patterns (default)
 " set magic
-
-" Required to be able to use keypad keys and map missed escape sequences
-set esckeys
+if ! has('nvim')
+    " Required to be able to use keypad keys and map missed escape sequences
+    set esckeys
+endif
 
 " allow backspacing over everything in insert mode 
 set backspace=indent,eol,start
@@ -97,6 +98,8 @@ call vundle#begin()
     Plugin 'nathanaelkane/vim-indent-guides'
     Plugin 'vim-airline/vim-airline-themes'
     Plugin 'Yggdroot/indentLine'
+    Plugin 'ctrlp.vim'
+    Plugin 'fugitive.vim'
 
     "---------=== Code/project navigation ===-------------
     Plugin 'scrooloose/nerdtree'           " Project and file navigation
@@ -211,7 +214,7 @@ let g:pymode_lint_checker = "pyflakes,pep8"
 let g:pymode_lint_ignore="E501,W601,C0110"
 let g:pymode_lint_cwindow = 1
 " Disable python Lint on write
-let g:pymode_lint_on_write = 0
+let g:pymode_lint_on_write = 1
 
 " virtualenv support
 let g:pymode_virtualenv = 1
@@ -320,21 +323,34 @@ map! <M-j> <Left>
 map! <M-k> <Down>
 map! <M-l> <Right>
 
-noremap I <PageUp>
-noremap J b
-noremap K <PageDown>
-noremap L w
+if ! has('nvim')
+    noremap I <PageUp>
+    noremap J b
+    noremap K <PageDown>
+    noremap L w
 
-noremap! I <PageUp>
-noremap! J <C-o>b
-noremap! K <PageDown>
-noremap! L <C-o>w
+    noremap! I <PageUp>
+    noremap! J <C-o>b
+    noremap! K <PageDown>
+    noremap! L <C-o>w
+else
+    noremap <M-I> <PageUp>
+    noremap <M-J> b
+    noremap <M-K> <PageDown>
+    noremap <M-L> w
 
-" Edit keys
+    noremap! <M-I> <PageUp>
+    noremap! <M-J> <C-o>b
+    noremap! <M-K> <PageDown>
+    noremap! <M-L> <C-o>w
+endif
+
+"Edit keys
 " Copy
 vmap <M-u> yi
 " Paste
 inoremap <M-o> <C-o>p
+nnoremap <M-o> p
 
 " Backspace
 map  <M-d> d<Left>i
@@ -356,8 +372,13 @@ imap <M-n> <C-x>s
 " Select modes
 nnoremap <M-h> i
 " To Normal mode
-vnoremap w <ESC>
-noremap! w <ESC>
+if ! has('nvim')
+    vnoremap w <ESC>
+    noremap! w <ESC>
+else
+    vnoremap <M-w> <ESC>
+    noremap! <M-w> <ESC>
+endif
 " To Visual mode
 function! ChangeVisualModInLoop()
     let l:current_mode = mode()
@@ -397,21 +418,39 @@ nmap <silent> _ <C-W>-
 "navigation between panels
 imap <silent> <C-W>         <C-o><C-w>
 
-inoremap <silent> wj   <ESC> :wincmd h <CR>i
-inoremap <silent> wl   <ESC> :wincmd l <CR>i
-inoremap <silent> wi   <ESC> :wincmd k <CR>i
-inoremap <silent> wk   <ESC> :wincmd j <CR>i
-inoremap <silent> ws   <ESC> :wincmd s <CR>i
-inoremap <silent> wv   <ESC> :wincmd v <CR>i
-inoremap <silent> wq   <C-o><C-w>q
+if ! has('nvim')
+    inoremap <silent> wj   <ESC> :wincmd h <CR>i
+    inoremap <silent> wl   <ESC> :wincmd l <CR>i
+    inoremap <silent> wi   <ESC> :wincmd k <CR>i
+    inoremap <silent> wk   <ESC> :wincmd j <CR>i
+    inoremap <silent> ws   <ESC> :wincmd s <CR>i
+    inoremap <silent> wv   <ESC> :wincmd v <CR>i
+    inoremap <silent> wq   <ESC>  :q
 
-nnoremap <silent> wj    :wincmd h <CR>
-nnoremap <silent> wl    :wincmd l <CR>
-nnoremap <silent> wi    :wincmd k <CR>
-nnoremap <silent> wk    :wincmd j <CR>
-nnoremap <silent> ws    :wincmd s <CR>
-nnoremap <silent> wv    :wincmd v <CR>
-nnoremap <silent> wq    <C-w>q
+    nnoremap <silent> wj    :wincmd h <CR>
+    nnoremap <silent> wl    :wincmd l <CR>
+    nnoremap <silent> wi    :wincmd k <CR>
+    nnoremap <silent> wk    :wincmd j <CR>
+    nnoremap <silent> ws    :wincmd s <CR>
+    nnoremap <silent> wv    :wincmd v <CR>
+    nnoremap <silent> wq    :q <CR>
+else
+    inoremap <silent> <M-w><M-j>   <ESC> :wincmd h <CR>i
+    inoremap <silent> <M-w><M-l>   <ESC> :wincmd l <CR>i
+    inoremap <silent> <M-w><M-i>   <ESC> :wincmd k <CR>i
+    inoremap <silent> <M-w><M-k>   <ESC> :wincmd j <CR>i
+    inoremap <silent> <M-w><M-s>   <ESC> :wincmd s <CR>i
+    inoremap <silent> <M-w><M-v>   <ESC> :wincmd v <CR>i
+    inoremap <silent> <M-w><M-q>   <ESC>  :q
+
+    nnoremap <silent> <M-w><M-j>    :wincmd h <CR>
+    nnoremap <silent> <M-w><M-l>    :wincmd l <CR>
+    nnoremap <silent> <M-w><M-i>    :wincmd k <CR>
+    nnoremap <silent> <M-w><M-k>    :wincmd j <CR>
+    nnoremap <silent> <M-w><M-s>    :wincmd s <CR>
+    nnoremap <silent> <M-w><M-v>    :wincmd v <CR>
+    nnoremap <silent> <M-w><M-q>    :q <CR>
+endif
 
 vmap <silent> <C-W><Up>     <C-W><Up>
 vmap <silent> <C-W><Down>   <C-W><Down>
