@@ -73,6 +73,8 @@ set ai
 
 " C-style indent
 set cin
+" Case sensitive search 
+"set noic
 
 set path+=/usr/include/**
 set path+=./**
@@ -100,7 +102,18 @@ call vundle#begin()
     Plugin 'Yggdroot/indentLine'
     Plugin 'ctrlp.vim'
     Plugin 'fugitive.vim'
-
+    "Plugin 'Syntastic'
+    Plugin 'easymotion/vim-easymotion'
+    map  ? <Plug>(easymotion-sn)
+    omap ? <Plug>(easymotion-tn)
+    map l <Plug>(easymotion-lineforward)
+    map k <Plug>(easymotion-j)
+    map i <Plug>(easymotion-k)
+    map j <Plug>(easymotion-linebackward)
+    map <M-x> <Plug>(easymotion-s2)
+    nmap t <Plug>(easymotion-t2)
+    let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+    
     "---------=== Code/project navigation ===-------------
     Plugin 'scrooloose/nerdtree'           " Project and file navigation
     Plugin 'majutsushi/tagbar'             " Class/module browser
@@ -109,7 +122,7 @@ call vundle#begin()
     Plugin 'bling/vim-airline'              " Lean & mean status/tabline for vim
     Plugin 'fisadev/FixedTaskList.vim'      " Pending tasks list
     Plugin 'rosenfeld/conque-term'          " Consoles as buffers
-    "Plugin 'tpope/vim-surround'            " Parentheses, brackets, quotes, XML tags, and more
+    Plugin 'tpope/vim-surround'            " Parentheses, brackets, quotes, XML tags, and more
 
     "--------------=== Snippets support ===---------------
     Plugin 'garbas/vim-snipmate'            " Snippets manager
@@ -211,7 +224,7 @@ let g:pymode_rope_complete_on_dot = 0
 " Code checking for python (Lint)
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8"
-let g:pymode_lint_ignore="E501,W601,C0110"
+let g:pymode_lint_ignore="E501,W601,C0110,W391"
 let g:pymode_lint_cwindow = 1
 " Disable python Lint on write
 let g:pymode_lint_on_write = 1
@@ -309,55 +322,61 @@ endfor
 "**********************************************************************************************************************
 " Navigation keys
 " map for visual, normal, select modes
-map  <M-i> <Up>
-map  <M-j> <Left>
-map  <M-k> <Down>
-map  <M-l> <Right>
-" Find key
-nmap <M-q> *N
-imap <M-q> <C-o>*
+noremap  <M-i> <Up>
+noremap  <M-j> <Left>
+noremap  <M-k> <Down>
+noremap  <M-l> <Right>
 
 " map! for insert, command modes
-map! <M-i> <Up>
-map! <M-j> <Left>
-map! <M-k> <Down>
-map! <M-l> <Right>
+noremap! <M-i> <Up>
+noremap! <M-j> <Left>
+noremap! <M-k> <Down>
+noremap! <M-l> <Right>
 
 if ! has('nvim')
-    noremap I <PageUp>
-    noremap J b
-    noremap K <PageDown>
+    noremap I 10<Up>
+    noremap J B
+    noremap K 10<Down>
     noremap L w
 
-    noremap! I <PageUp>
-    noremap! J <C-o>b
-    noremap! K <PageDown>
+    noremap! I <C-o>10<Up>
+    noremap! J <C-o>B
+    noremap! K <C-o>10<Down>
     noremap! L <C-o>w
 else
-    noremap <M-I> <PageUp>
-    noremap <M-J> b
-    noremap <M-K> <PageDown>
+    noremap <M-I> 10<Up>
+    noremap <M-J> B
+    noremap <M-K> 10<Down>
     noremap <M-L> w
 
-    noremap! <M-I> <PageUp>
-    noremap! <M-J> <C-o>b
-    noremap! <M-K> <PageDown>
+    noremap! <M-I> <C-o>10<Up>
+    noremap! <M-J> <C-o>B
+    noremap! <M-K> <C-o>10<Down>
     noremap! <M-L> <C-o>w
 endif
 
+" Find key
+nnoremap <M-q> *N
+inoremap <M-q> <C-o>*
+"""""""""""""""""""""""""""""""""""""
 "Edit keys
+"""""""""""""""""""""""""""""""""""""
 " Copy
-vmap <M-u> yi
+vnoremap <M-u> yi
 " Paste
 inoremap <M-o> <C-o>p
 nnoremap <M-o> p
+"Paste mode
+nnoremap <M-p> :set invpaste paste?<CR>
+set pastetoggle=<M-p>
+set showmode
 
 " Backspace
-map  <M-d> d<Left>i
-map! <M-d> <Backspace>
+noremap  <M-d> d<Right>i
+noremap! <M-d> <Backspace>
 " DELETE
-map  <M-f> d<Right>i
-map! <M-f> <Del>
+noremap  <M-f>  d<Right>i
+noremap! <M-f> <Del>
 
 " Undo
 nnoremap <M-e> u
@@ -365,20 +384,26 @@ inoremap <M-e> <C-o>u
 
 " Redo
 nnoremap <M-r> <C-r>
-inoremap <M-r> <C-o><C-r>i
+inoremap <M-r> <C-o><C-r>
 
 " Spell suggestions
-imap <M-n> <C-x>s
+inoremap <M-n> <C-x>s
+"""""""""""""""""""""""""""""""""""""
 " Select modes
-nnoremap <M-h> i
+"""""""""""""""""""""""""""""""""""""
+nnoremap <M-c> i
+
 " To Normal mode
 if ! has('nvim')
-    vnoremap w <ESC>
-    noremap! w <ESC>
+    vnoremap c <ESC>
+    noremap! c <Right><ESC>
+    onoremap c <ESC>
 else
-    vnoremap <M-w> <ESC>
-    noremap! <M-w> <ESC>
+    vnoremap <M-c> <ESC>
+    noremap! <M-c> <Right><ESC>
+    onoremap <M-c> <ESC>
 endif
+
 " To Visual mode
 function! ChangeVisualModInLoop()
     let l:current_mode = mode()
@@ -403,11 +428,12 @@ function! ChangeVisualModInLoop()
     set ignorecase
     return l:next_mode
 endfunction
+
 vnoremap <expr> <M-v>  ChangeVisualModInLoop()
 inoremap <expr> <M-v>  ChangeVisualModInLoop()
 nnoremap <expr> <M-v>  ChangeVisualModInLoop()
-nnoremap <M-u> bve
-inoremap <M-u> <ESC>bve
+nnoremap <M-u>         bve
+inoremap <M-u>         <ESC>bve
 
 "resizing of panel
 nmap <silent> ( <C-W><
@@ -416,46 +442,46 @@ nmap <silent> + <C-W>+
 nmap <silent> _ <C-W>-
 
 "navigation between panels
-imap <silent> <C-W>         <C-o><C-w>
 
 if ! has('nvim')
-    inoremap <silent> wj   <ESC> :wincmd h <CR>i
-    inoremap <silent> wl   <ESC> :wincmd l <CR>i
-    inoremap <silent> wi   <ESC> :wincmd k <CR>i
-    inoremap <silent> wk   <ESC> :wincmd j <CR>i
-    inoremap <silent> ws   <ESC> :wincmd s <CR>i
-    inoremap <silent> wv   <ESC> :wincmd v <CR>i
-    inoremap <silent> wq   <ESC>  :q
+    inoremap <silent> wj   <C-o>:wincmd h <CR>
+    inoremap <silent> wl   <C-o>:wincmd l <CR>
+    inoremap <silent> wi   <C-o>:wincmd k <CR>
+    inoremap <silent> wk   <C-o>:wincmd j <CR>
+    inoremap <silent> ws   <C-o>:wincmd s <CR>
+    inoremap <silent> wv   <C-o>:wincmd v <CR>
+    inoremap <silent> wq   <C-o>:q <CR>
 
-    nnoremap <silent> wj    :wincmd h <CR>
-    nnoremap <silent> wl    :wincmd l <CR>
-    nnoremap <silent> wi    :wincmd k <CR>
-    nnoremap <silent> wk    :wincmd j <CR>
-    nnoremap <silent> ws    :wincmd s <CR>
-    nnoremap <silent> wv    :wincmd v <CR>
-    nnoremap <silent> wq    :q <CR>
+    noremap <silent> wj    :wincmd h <CR>
+    noremap <silent> wl    :wincmd l <CR>
+    noremap <silent> wi    :wincmd k <CR>
+    noremap <silent> wk    :wincmd j <CR>
+    noremap <silent> ws    :wincmd s <CR>
+    noremap <silent> wv    :wincmd v <CR>
+    noremap <silent> wq    :q <CR>
 else
-    inoremap <silent> <M-w><M-j>   <ESC> :wincmd h <CR>i
-    inoremap <silent> <M-w><M-l>   <ESC> :wincmd l <CR>i
-    inoremap <silent> <M-w><M-i>   <ESC> :wincmd k <CR>i
-    inoremap <silent> <M-w><M-k>   <ESC> :wincmd j <CR>i
-    inoremap <silent> <M-w><M-s>   <ESC> :wincmd s <CR>i
-    inoremap <silent> <M-w><M-v>   <ESC> :wincmd v <CR>i
-    inoremap <silent> <M-w><M-q>   <ESC>  :q
+    inoremap <silent> <M-w><M-j>   <C-o>:wincmd h <CR>
+    inoremap <silent> <M-w><M-l>   <C-o>:wincmd l <CR>
+    inoremap <silent> <M-w><M-i>   <C-o>:wincmd k <CR>
+    inoremap <silent> <M-w><M-k>   <C-o>:wincmd j <CR>
+    inoremap <silent> <M-w><M-s>   <C-o>:wincmd s <CR>
+    inoremap <silent> <M-w><M-v>   <C-o>:wincmd v <CR>
+    inoremap <silent> <M-w><M-q>   <C-o>:q <CR>
 
-    nnoremap <silent> <M-w><M-j>    :wincmd h <CR>
-    nnoremap <silent> <M-w><M-l>    :wincmd l <CR>
-    nnoremap <silent> <M-w><M-i>    :wincmd k <CR>
-    nnoremap <silent> <M-w><M-k>    :wincmd j <CR>
-    nnoremap <silent> <M-w><M-s>    :wincmd s <CR>
-    nnoremap <silent> <M-w><M-v>    :wincmd v <CR>
-    nnoremap <silent> <M-w><M-q>    :q <CR>
+    noremap <silent> <M-w><M-j>    :wincmd h <CR>
+    noremap <silent> <M-w><M-l>    :wincmd l <CR>
+    noremap <silent> <M-w><M-i>    :wincmd k <CR>
+    noremap <silent> <M-w><M-k>    :wincmd j <CR>
+    noremap <silent> <M-w><M-s>    :wincmd s <CR>
+    noremap <silent> <M-w><M-v>    :wincmd v <CR>
+    noremap <silent> <M-w><M-q>    :q <CR>
 endif
 
-vmap <silent> <C-W><Up>     <C-W><Up>
-vmap <silent> <C-W><Down>   <C-W><Down>
-vmap <silent> <C-W><Right>  <C-W><Right>
-vmap <silent> <C-W><Left>   <C-W><Left>
+imap     <silent> <C-W>         <C-o><C-w>
+vnoremap <silent> <C-W><Up>     <C-W><Up>
+vnoremap <silent> <C-W><Down>   <C-W><Down>
+vnoremap <silent> <C-W><Right>  <C-W><Right>
+vnoremap <silent> <C-W><Left>   <C-W><Left>
 
 map <silent> <C-\>v  :Ag<CR>
 
@@ -463,40 +489,37 @@ map <silent> <F1>       :TaskList<CR>
 "Open/close directory tree
 map <silent> <F2>       :NERDTreeToggle<cr>
 imap <silent> <F2>      <ESC>:NERDTreeToggle<cr>
-"Open/close the list of opened buffers
+"Open/close the list of opened buffersw
 map <silent> <F3>       :BufExplorer<cr>
 imap <silent> <F3>      <ESC>:BufExplorer<cr>
 "Open/clode the list of Tags in the current buffer
 map <silent> <F4>       :TagbarToggle <CR>
-"Paste mode
-nnoremap <M-p> :set invpaste paste?<CR>
-set pastetoggle=<M-p>
-set showmode
 
 " Key for manual check of python code
-autocmd FileType python map <silent> <buffer> <leader>c :PymodeLint<CR>
-" run python script
-nnoremap <F5> :ConqueTermSplit ipython<CR>
-" debug-mode <F6>
-nnoremap <F6> :exe "ConqueTermSplit ipython " . expand("%")<CR>
+augroup python_autocmds
+    autocmd!
+    autocmd FileType python map <silent> <buffer> <leader>c :PymodeLint<CR>
+    autocmd FileType python PymodeLint
+    autocmd FileType python nnoremap <F5> :ConqueTermSplit ipython<CR>
+    autocmd FileType python nnoremap <F6> :exe "ConqueTermSplit ipython " . expand("%")<CR>
+augroup END
 
 "On/Off spell check
 nnoremap <F7>            :set spell! spell?<CR> 
-inoremap <F7>            <ESC>:set spell! spell?<CR>i
+inoremap <F7>            <C-o>:set spell! spell?<CR>
 
 "On/off higlight of serach results
-nnoremap <f8>            :set hlsearch! hlsearch?<cr>
-inoremap <f8>           <ESC>:set hlsearch! hlsearch?<cr>i
+nnoremap <F8>            :noh<CR>
+inoremap <F8>            <C-o>:noh<CR>
 
 "build of cscope DB
 map <silent> <F11>  :cs reset <CR> 
 map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.sh -f ../cscope.paths & <CR>
 
 "save file
-nmap <silent> <M-s>     :w! <CR>
-imap <silent> <M-s>     <ESC>:w! <CR>i
-imap <silent> <Insert>  <ESC>
-
+nnoremap <silent> <M-s>     :w! <CR>
+inoremap <silent> <M-s>     <ESC>:w! <CR>i
+inoremap <silent> <Insert>  <ESC>
 "**********************************************************************************************************************
 " OmniCppComplete
 "let OmniCpp_NamespaceSearch = 1
@@ -518,178 +541,4 @@ imap <silent> <Insert>  <ESC>
 " enable this for bash compatible behaviour
 " set wildmode=longest,full
 
-" Try to get the correct main terminal type
-"if &term =~ "xterm"
-"    ret myterm = "xterm"
-"else
-"    let myterm =  &term
-"endif
-"let myterm = substitute(myterm, "cons[0-9][0-9].*$",  "linux", "")
-"let myterm = substitute(myterm, "vt1[0-9][0-9].*$",   "vt100", "")
-"let myterm = substitute(myterm, "vt2[0-9][0-9].*$",   "vt220", "")
-"let myterm = substitute(myterm, "\\([^-]*\\)[_-].*$", "\\1",   "")
-"
-"" Here we define the keys of the NumLock in keyboard transmit mode of xterm
-"" which misses or hasn't activated Alt/NumLock Modifiers.  Often not defined
-"" within termcap/terminfo and we should map the character printed on the keys.
-"if myterm == "xterm" || myterm == "kvt" || myterm == "gnome"
-"    " keys in insert/command mode.
-"    map! <ESC>Oo  :
-"    map! <ESC>Oj  *
-"    map! <ESC>Om  -
-"    map! <ESC>Ok  +
-"    map! <ESC>Ol  ,
-"    map! <ESC>OM  
-"    map! <ESC>Ow  7
-"    map! <ESC>Ox  8
-"    map! <ESC>Oy  9
-"    map! <ESC>Ot  4
-"    map! <ESC>Ou  5
-"    map! <ESC>Ov  6
-"    map! <ESC>Oq  1
-"    map! <ESC>Or  2
-"    map! <ESC>Os  3
-"    map! <ESC>Op  0
-"    map! <ESC>On  .
-"    " keys in normal mode
-"    map <ESC>Oo  :
-"    map <ESC>Oj  *
-"    map <ESC>Om  -
-"    map <ESC>Ok  +
-"    map <ESC>Ol  ,
-"    map <ESC>OM  
-"    map <ESC>Ow  7
-"    map <ESC>Ox  8
-"    map <ESC>Oy  9
-"    map <ESC>Ot  4
-"    map <ESC>Ou  5
-"    map <ESC>Ov  6
-"    map <ESC>Oq  1
-"    map <ESC>Or  2
-"    map <ESC>Os  3
-"    map <ESC>Op  0
-"    map <ESC>On  .
-"    endif
-"
-"    " xterm but without activated keyboard transmit mode
-"    " and therefore not defined in termcap/terminfo.
-"    if myterm == "xterm" || myterm == "kvt" || myterm == "gnome"
-"    " keys in insert/command mode.
-"    map! <Esc>[H  <Home>
-"    map! <Esc>[F  <End>
-"    " Home/End: older xterms do not fit termcap/terminfo.
-"    map! <Esc>[1~ <Home>
-"    map! <Esc>[4~ <End>
-"    " Up/Down/Right/Left
-"    map! <Esc>[A  <Up>
-"    map! <Esc>[B  <Down>
-"    map! <Esc>[C  <Right>
-"    map! <Esc>[D  <Left>
-"    " KP_5 (NumLock off)
-"    map! <Esc>[E  <Insert>
-"    " keys in normal mode
-"    map <ESC>[H  0
-"    map <ESC>[F  $
-"    " Home/End: older xterms do not fit termcap/terminfo.
-"    map <ESC>[1~ 0
-"    map <ESC>[4~ $
-"    " Up/Down/Right/Left
-"    map <ESC>[OA  k
-"    map <ESC>[OB  j
-"    map <ESC>[OC  l
-"    map <ESC>[OD  h
-"    " KP_5 (NumLock off)
-"    map <ESC>[E  i
-"    endif
-"
-"    " xterm/kvt but with activated keyboard transmit mode.
-"    " Sometimes not or wrong defined within termcap/terminfo.
-"    if myterm == "xterm" || myterm == "kvt" || myterm == "gnome"
-"    " keys in insert/command mode.
-"    map! <Esc>OH <Home>
-"    map! <Esc>OF <End>
-"    map! <ESC>O2H <Home>
-"    map! <ESC>O2F <End>
-"    map! <ESC>O5H <Home>
-"    map! <ESC>O5F <End>
-"    " Cursor keys which works mostly
-"    " map! <Esc>OA <Up>
-"    " map! <Esc>OB <Down>
-"    " map! <Esc>OC <Right>
-"    " map! <Esc>OD <Left>
-"    map! <Esc>[2;2~ <Insert>
-"    map! <Esc>[3;2~ <Delete>
-"    map! <Esc>[2;5~ <Insert>
-"    map! <Esc>[3;5~ <Delete>
-"    map! <Esc>O2A <PageUp>
-"    map! <Esc>O2B <PageDown>
-"    map! <Esc>O2C <S-Right>
-"    map! <Esc>O2D <S-Left>
-"    map! <Esc>O5A <PageUp>
-"    map! <Esc>O5B <PageDown>
-"    map! <Esc>O5C <S-Right>
-"    map! <Esc>O5D <S-Left>
-"    " KP_5 (NumLock off)
-"    map! <Esc>OE <Insert>
-"    " keys in normal mode
-"    map <ESC>OH  0
-"    map <ESC>OF  $
-"    map <ESC>O2H  0
-"    map <ESC>O2F  $
-"    map <ESC>O5H  0
-"    map <ESC>O5F  $
-"    " Cursor keys which works mostly
-"    " map <ESC>OA  k
-"    " map <ESC>OB  j
-"    " map <ESC>OD  h
-"    " map <ESC>OC  l
-"    map <Esc>[2;2~ i
-"    map <Esc>[3;2~ x
-"    map <Esc>[2;5~ i
-"    map <Esc>[3;5~ x
-"    map <ESC>O2A  ^B
-"    map <ESC>O2B  ^F
-"    map <ESC>O2D  b
-"    map <ESC>O2C  w
-"    map <ESC>O5A  ^B
-"    map <ESC>O5B  ^F
-"    map <ESC>O5D  b
-"    map <ESC>O5C  w
-"    " KP_5 (NumLock off)
-"    map <ESC>OE  i
-"    endif
-"
-"    if myterm == "linux"
-"    " keys in insert/command mode.
-"    map! <Esc>[G  <Insert>
-"    " KP_5 (NumLock off)
-"    " keys in normal mode
-"    " KP_5 (NumLock off)
-"    map <ESC>[G  i
-"    endif
-"
-"    " This escape sequence is the well known ANSI sequence for
-"    " Remove Character Under The Cursor (RCUTC[tm])
-"    " map! <Esc>[3~ <Delete>
-"    map  <ESC>[3~    x
-"
-"    " Only do this part when compiled with support for autocommands. 
-"    if has("autocmd") 
-"    " When editing a file, always jump to the last known cursor position. 
-"    " Don't do it when the position is invalid or when inside an event handler 
-"    " (happens when dropping a file on gvim). 
-"    autocmd BufReadPost * 
-"    \ if line("'\"") > 0 && line("'\"") <= line("$") | 
-"    \   exe "normal g`\"" | 
-"    \ endif 
-"
-"    endif " has("autocmd")
-"
-"    " Changed default required by SuSE security team--be aware if enabling this
-"    " that it potentially can open for malicious users to do harmful things.
-"    set nomodeline
-"
-"    " get easier to use and more user friendly vim defaults
-"
-"**********************************************************************************************************************
-" /etc/vimrc ends here 
+"/etc/vimrc ends here 

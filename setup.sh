@@ -1,13 +1,14 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/" 
 
 function updateConfigFile () {
     sourceConfigFile=$1 
     configFile=$2
     echo "Remove the file: $configFile"
     rm "$configFile"
-    echo "Create link $sourceConfigFile => $configFile"
-    ln "$sourceConfigFile" "$configFile"
+    echo "Create link $DIR$sourceConfigFile => $configFile"
+    ln -s $DIR"$sourceConfigFile" "$configFile"
 }
 
 updateConfigFile ./zsh/zshrc ~/.zshrc

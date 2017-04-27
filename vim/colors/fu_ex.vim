@@ -44,7 +44,7 @@ hi FoldColumn     ctermfg=248   ctermbg=bg                   guifg=#a8a8a8  guib
 hi Folded         ctermfg=255   ctermbg=60                   guifg=#eeeeee  guibg=#5f5f87
 hi IncSearch      ctermfg=0     ctermbg=223                  guifg=#000000  guibg=#ffd7af
 hi NonText        ctermfg=248   ctermbg=234   cterm=bold     guifg=#a8a8a8  guibg=#121212
-hi Search         ctermfg=0     ctermbg=149                  guifg=#000000  guibg=#afd75f
+hi Search         ctermfg=0     ctermbg=96                   guifg=#000000  guibg=#afd75f
 hi SignColumn     ctermfg=248   ctermbg=232                             guifg=#a8a8a8
 hi SpecialKey     ctermfg=77                                 guifg=#5fd75f
 hi StatusLine     ctermfg=232   ctermbg=255                  guifg=#080808  guibg=#eeeeee
