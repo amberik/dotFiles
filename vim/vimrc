@@ -224,7 +224,7 @@ let g:pymode_rope_complete_on_dot = 0
 " Code checking for python (Lint)
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8"
-let g:pymode_lint_ignore="E501,W601,C0110,W391"
+let g:pymode_lint_ignore="E501,W601,C0110,W391,E221"
 let g:pymode_lint_cwindow = 1
 " Disable python Lint on write
 let g:pymode_lint_on_write = 1
@@ -372,7 +372,7 @@ set pastetoggle=<M-p>
 set showmode
 
 " Backspace
-noremap  <M-d> d<Right>i
+noremap  <M-d> d<Left>i
 noremap! <M-d> <Backspace>
 " DELETE
 noremap  <M-f>  d<Right>i
