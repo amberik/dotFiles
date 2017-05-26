@@ -22,14 +22,13 @@ build()
         then
             echo "Skipping path: $path"
         else
+            echo "start build search dir list"
             find $path -name \*.h -print -o -name \*.cpp -print -o -name \*.c -print -o -name \*.cxx -print -o -name \*.hpp -print -o -name \*.hxx -print >> ./cscope.files;
-#find $path -name \*.h -print -o -name \*.cpp -print -o -name \*.c -print -o -name \*.cxx -print -o -name \*.hpp -print -o -name \*.hxx -print >> ./gtags.files;
         fi
     done
-#	ctags -L cscope.files --sort=yes --c++-kinds=+pl --fields=+iaS --extra=+q &
-    echo "start"
+    echo "start build DB"
 	cscope -RUbq 2>/dev/null;
-    echo "finish"
+    echo "finished"
 }
 
 #######################################################################################################
@@ -51,7 +50,7 @@ if ! [ -r $file ]; then
     exit 1;
 fi
 
-buff=`cat $file`
+buff=`cut -d' ' -f2- $file`
 
 while read line
 do

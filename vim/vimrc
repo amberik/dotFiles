@@ -93,13 +93,15 @@ set tags+=./tags
 set rtp+=~/dotFiles/vim/
 set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/.vim/bundle/vim-airline-themes/
+
+" Set color scheme
+colorscheme fu_ex
+
 call vundle#begin()
-    
     Plugin 'gmarik/Vundle.vim'      " let Vundle manage Vundle, required
     Plugin 'bufexplorer.zip'    
     Plugin 'ervandew/supertab'
     Plugin 'xterm-color-table.vim'
-    Plugin 'noah/vim256-color'
     Plugin 'nathanaelkane/vim-indent-guides'
     Plugin 'vim-airline/vim-airline-themes'
     Plugin 'Yggdroot/indentLine'
@@ -108,25 +110,48 @@ call vundle#begin()
     Plugin 'w0rp/ale'
     let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
     let g:ale_lint_on_text_changed = 'never'
-    let g:ale_linters = {'python':['flake8']}
+    let g:ale_linters = {'python':['flake8'], 'cpp':[], 'c':[]}
+
     let g:ale_python_flake8_options = '--ignore=E501,E221,E731,E241,E251,E272'
     let g:ale_echo_msg_error_str = 'Error'
     let g:ale_echo_msg_format = '[%linter%] %s'
     let g:ale_echo_msg_warning_str = 'Warning'
+    let g:ale_set_loclist = 0
+    let g:ale_set_quickfix = 1
 
     Plugin 'easymotion/vim-easymotion'
     Plugin 'Valloric/ListToggle'
     let g:lt_location_list_toggle_map = '<Leader>l'
     let g:lt_quickfix_list_toggle_map = '<Leader>q'
     "---------=== Code/project navigation ===-------------
+    "**********************************************************************************************************************
+    " NERDTree
     Plugin 'scrooloose/nerdtree'           " Project and file navigation
+    let g:NERDTreeBookmarksFile = expand('%:p:h')."/.BookMarks"
+
     Plugin 'majutsushi/tagbar'             " Class/module browser
     "
     ""------------------=== Other ===----------------------
+    " Vim Airline
     Plugin 'bling/vim-airline'              " Lean & mean status/tabline for vim
+    set laststatus=2
+    let g:airline_theme='badwolf'
+    let g:airline_powerline_fonts = 1
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#formatter = 'unique_tail'
+    let g:airline_exclude_preview=1
+
+    "**********************************************************************************************************************
+    " Tilst_settings
     Plugin 'fisadev/FixedTaskList.vim'      " Pending tasks list
+    let Tlist_Use_Right_Window = 1
+    let Tlist_Exit_OnlyWindow = 1
+    let Tlist_Sort_Type = "name"
+    "**********************************************************************************************************************
     Plugin 'rosenfeld/conque-term'          " Consoles as buffers
     Plugin 'tpope/vim-surround'            " Parentheses, brackets, quotes, XML tags, and more
+    Plugin 'romainl/vim-cool'              " disables search highlighting when you are done searching and re-enables it when you search again.
+    Plugin 'romainl/vim-qf'
 
     "--------------=== Snippets support ===---------------
     Plugin 'garbas/vim-snipmate'            " Snippets manager
@@ -135,54 +160,73 @@ call vundle#begin()
     Plugin 'honza/vim-snippets'             " snippets repo
     "
     ""---------------=== Languages support ===-------------
+    Plugin 'mitsuhiko/vim-jinja'            " Jinja support for vim
     " --- Python ---
     Plugin 'klen/python-mode'               " Python mode (docs, refactor,
+    "=====================================================
+    " Python-mode settings
+    "=====================================================
+    " Disable python code auto complete (will use jedi-vim) 
+    let g:pymode_rope = 0
+    let g:pymode_rope_completion = 0
+    let g:pymode_rope_complete_on_dot = 0
+    " Do NOT Code checking for python (Lint)
+    let g:pymode_lint = 0
+    " virtualenv support
+    let g:pymode_virtualenv = 1
+    " Set of breakpoints in python
+    let g:pymode_breakpoint = 1
+    let g:pymode_breakpoint_key = '<leader>b'
+    " Python syntax
+    let g:pymode_syntax = 1
+    let g:pymode_syntax_all = 1
+    let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+    let g:pymode_syntax_space_errors = g:pymode_syntax_all
+    " Disable autofold in python code
+    let g:pymode_folding = 0
+    " Support of run of python code
+    let g:pymode_run = 0
+    let g:pymode_run_bind = '<leader>r'
+    let g:pymode_doc = 0
+    let g:pymode_doc_bind = ''
+
+    Plugin 'mitsuhiko/vim-python-combined'  " Combined Python 2/3 for Vim
                                             "  lints, highlighting, run and ipdb and more)
     Plugin 'roxma/nvim-completion-manager'
     if !has('nvim')
         Plugin 'roxma/vim-hug-neovim-rpc'
     endif
-    Plugin 'davidhalter/jedi-vim'           " Jedi-vim autocomplete plugin
     " ------------------------------------------------------------------------------
     " JEDI settings
     " ------------------------------------------------------------------------------
+    Plugin 'davidhalter/jedi-vim'           " Jedi-vim autocomplete plugin
+    set splitbelow
     let g:jedi#popup_select_first = 1
     let g:jedi#show_call_signatures = 0
     let g:jedi#auto_close_doc = 1
-    set splitbelow
     let g:jedi#goto_command = '<leader>d'
-
     " ------------------------------------------------------------------------------
     " This function finds the first definition of the function/class under the
     " cursor. It produces an error if the definition is not in a Python file.
     let g:jedi#goto_assignments_command = '<leader>g'
-
-
     "------------------------------------------------------------------------------
     "This shows the pydoc documentation for the item currently under the cursor.
     "The documentation is opened in a horizontally split buffer. The height of this
     "buffer is controlled by `g:jedi#max_doc_height` (set by default to 30).
-
     let g:jedi#documentation_command = '<leader>h'
-
     "------------------------------------------------------------------------------
     "Jedi-vim deletes the word currently under the cursor and puts Vim in insert
     "mode, where the user is expected to enter the new variable name. Upon leaving
     "insert mode, jedi-vim then renames all occurences of the old variable name
     "with the new one. The number of performed renames is displayed in the command
     "line.
-
     let g:jedi#rename_command = '<leader>r'
-
     "------------------------------------------------------------------------------
     "The quickfix window is populated with a list of all names which point to the
     "definition of the name under the cursor.
-
     let g:jedi#usages_command = '<leader>]'
-    Plugin 'mitsuhiko/vim-jinja'            " Jinja support for vim
-    Plugin 'mitsuhiko/vim-python-combined'  " Combined Python 2/3 for Vim
-
 call vundle#end()                    " required
+
 function! jedi#add_goto_window(len) abort
     set lazyredraw
     cclose
@@ -203,8 +247,14 @@ filetype on
 filetype plugin on
 filetype plugin indent on
 
-" Set color scheme
-colorscheme fu_ex
+let html_no_rendering=1
+let g:closetag_default_xml=1
+let g:sparkupNextMapping='<c-l>'
+
+let g:ConqueTerm_StartMessages = 0
+let g:ConqueTerm_CloseOnEnd = 0
+let g:indentLine_color_term = 236
+let g:indentLine_char = '┋'
 
 " disable tabs replacement for the specified filetypes
 au FileType crontab,fstab,make set noexpandtab tabstop=8 shiftwidth=8
@@ -214,29 +264,11 @@ augroup vimrc_autocmds
     autocmd FileType ruby,python,javascript,c,cpp set colorcolumn=0
     autocmd FileType ruby,python,javascript,c,cpp set nowrap
 augroup END
-
-
-set laststatus=2
-let g:airline_theme='badwolf'
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_exclude_preview=1
-
-
-"**********************************************************************************************************************
-" NERDTree
-let g:NERDTreeBookmarksFile = expand('%:p:h')."/.BookMarks"
-
-"**********************************************************************************************************************
-" Tilst_settings
-let Tlist_Use_Right_Window = 1
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_Sort_Type = "name"
-"**********************************************************************************************************************
 "=====================================================
 " Languages support
 "=====================================================
+" --- C and C++ ---
+so ~/dotFiles/vim/cscope_maps.vim
 " --- Python ---
 "autocmd FileType python set completeopt-=preview " раскомментируйте, в случае, если не надо, чтобы jedi-vim показывал документацию по методу/классу
 autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8
@@ -267,50 +299,34 @@ autocmd FileType css setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
 
 " --- YUML ---
 autocmd FileType yml,yaml setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+" Key for manual check of python code
+augroup python_autocmds
+    autocmd!
+    autocmd FileType python nnoremap <F5> :ConqueTermSplit ipython<CR>
+    autocmd FileType python nnoremap <F6> :exe "ConqueTermSplit ipython " . expand("%")<CR>
+augroup END
 
-let html_no_rendering=1
-let g:closetag_default_xml=1
-let g:sparkupNextMapping='<c-l>'
-
-"=====================================================
-" Python-mode settings
-"=====================================================
-" Disable python code auto complete (will use jedi-vim) 
-let g:pymode_rope = 0
-let g:pymode_rope_completion = 0
-let g:pymode_rope_complete_on_dot = 0
-
-" Do NOT Code checking for python (Lint)
-let g:pymode_lint = 0
-
-" virtualenv support
-let g:pymode_virtualenv = 1
-
-" Set of breakpoints in python
-let g:pymode_breakpoint = 1
-let g:pymode_breakpoint_key = '<leader>b'
-
-" Python syntax
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-" Disable autofold in python code
-let g:pymode_folding = 0
-
-" Support of run of python code
-let g:pymode_run = 0
-let g:pymode_run_bind = '<leader>r'
-
-let g:pymode_doc = 0
-let g:pymode_doc_bind = ''
-
-
-let g:ConqueTerm_StartMessages = 0
-let g:ConqueTerm_CloseOnEnd = 0
-let g:indentLine_color_term = 236
-let g:indentLine_char = '┋'
+" Key for manual check of python code
+augroup c_cpp_autocmds
+    autocmd!
+    " s: Find this C symbol
+    autocmd FileType c,cpp map <silent> <M-m>s  :call CscopeFind('s', expand('<cword>'), 'n')<CR>
+    " g: Find this definition
+    autocmd FileType c,cpp map <silent> <M-m>g  :call CscopeFind('g', expand('<cword>'), 'n')<CR>
+    " d: Find functions called by this function
+    autocmd FileType c,cpp map <silent> <M-m>d  :call CscopeFind('d', expand('<cword>'), 'n')<CR>
+    " c: Find functions calling this function
+    autocmd FileType c,cpp map <silent> <M-m>c  :call CscopeFind('c', expand('<cword>'), 'n')<CR>
+    " t: Find this text string
+    autocmd FileType c,cpp map <silent> <M-m>t  :call CscopeFind('t', expand('<cword>'), 'n')<CR>
+    " e: Find this egrep pattern
+    autocmd FileType c,cpp map <silent> <M-m>e  :call CscopeFind('e', expand('<cword>'), 'n')<CR>
+    " f: Find this file
+    autocmd FileType c,cpp map <silent> <M-m>f  :call CscopeFind('f', expand('<cword>'), 'n')<CR>
+    " i: Find files #including this file
+    autocmd FileType c,cpp map <silent> <M-m>i  :call CscopeFind('i', expand('<cword>'), 'n')<CR>
+    autocmd FileType c,cpp map <silent> <M-m>l  :call ToggleLocationList()<CR>
+augroup END
 "**********************************************************************************************************************
 "                       KEY MAPPING
 "**********************************************************************************************************************
@@ -516,12 +532,6 @@ imap <silent> <F3>      <ESC>:BufExplorer<cr>
 "Open/clode the list of Tags in the current buffer
 map <silent> <F4>       :TagbarToggle <CR>
 
-" Key for manual check of python code
-augroup python_autocmds
-    autocmd!
-    autocmd FileType python nnoremap <F5> :ConqueTermSplit ipython<CR>
-    autocmd FileType python nnoremap <F6> :exe "ConqueTermSplit ipython " . expand("%")<CR>
-augroup END
 
 "On/Off spell check
 nnoremap <F7>            :set spell! spell?<CR> 
@@ -533,7 +543,7 @@ inoremap <F8>            <C-o>:noh<CR>
 
 "build of cscope DB
 map <silent> <F11>  :cs reset <CR> 
-map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.sh -f ../cscope.paths & <CR>
+map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.sh -f ./.BookMarks & <CR>
 
 "save file
 nnoremap <silent> <M-s>     :w! <CR>
