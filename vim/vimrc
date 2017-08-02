@@ -105,8 +105,13 @@ call vundle#begin()
     Plugin 'nathanaelkane/vim-indent-guides'
     Plugin 'vim-airline/vim-airline-themes'
     Plugin 'Yggdroot/indentLine'
+    Plugin 'closetag.vim'
     Plugin 'ctrlp.vim'
     Plugin 'fugitive.vim'
+    Plugin 'rking/ag.vim'
+    let g:ag_lhandler="rightbelow lw"
+    map <M-m>m :LAg<CR>
+    map <M-m><M-m> :LAg<CR>
     Plugin 'w0rp/ale'
     let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
     let g:ale_lint_on_text_changed = 'never'
@@ -150,8 +155,10 @@ call vundle#begin()
     "**********************************************************************************************************************
     Plugin 'rosenfeld/conque-term'          " Consoles as buffers
     Plugin 'tpope/vim-surround'            " Parentheses, brackets, quotes, XML tags, and more
-    Plugin 'romainl/vim-cool'              " disables search highlighting when you are done searching and re-enables it when you search again.
-    Plugin 'romainl/vim-qf'
+    if has('nvim')
+        Plugin 'romainl/vim-cool'              " disables search highlighting when you are done searching and re-enables it when you search again.
+    endif
+"    Plugin 'romainl/vim-qf'
 
     "--------------=== Snippets support ===---------------
     Plugin 'garbas/vim-snipmate'            " Snippets manager
@@ -200,7 +207,7 @@ call vundle#begin()
     " JEDI settings
     " ------------------------------------------------------------------------------
     Plugin 'davidhalter/jedi-vim'           " Jedi-vim autocomplete plugin
-    set splitbelow
+"    set splitbelow
     let g:jedi#popup_select_first = 1
     let g:jedi#show_call_signatures = 0
     let g:jedi#auto_close_doc = 1
@@ -269,6 +276,54 @@ augroup END
 "=====================================================
 " --- C and C++ ---
 so ~/dotFiles/vim/cscope_maps.vim
+function! LListToggle() abort
+    let buffer_count_before = s:BufferCount()
+    " Location list can't be closed if there's cursor in it, so we need 
+    " to call lclose twice to move cursor to the main pane
+    silent! lclose
+    silent! lclose
+
+    if s:BufferCount() == buffer_count_before
+        execute "silent! lopen 10"
+    endif
+endfunction
+
+function! QListToggle() abort
+    let buffer_count_before = s:BufferCount()
+    silent! cclose
+
+    if s:BufferCount() == buffer_count_before
+        execute "silent! botright copen 10"
+    endif
+endfunction
+
+function! s:BufferCount() abort
+    return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+endfunction
+
+nmap <silent> <M-m>l :call LListToggle()<CR>
+nmap <silent> <M-m><M-l> :call LListToggle()<CR>
+nmap <silent> <M-m>q :call QListToggle()<CR>
+nmap <silent> <M-m><M-q> :call QListToggle()<CR>
+augroup c_cpp_autocmds
+    autocmd!
+    " s: Find this C symbol
+    autocmd FileType c,cpp map <silent> <M-m>s  :call CscopeFind('s', expand('<cword>'), 'n')<CR>
+    " g: Find this definition
+    autocmd FileType c,cpp map <silent> <M-m>g  :call CscopeFind('g', expand('<cword>'), 'n')<CR>
+    " d: Find functions called by this function
+    autocmd FileType c,cpp map <silent> <M-m>d  :call CscopeFind('d', expand('<cword>'), 'n')<CR>
+    " c: Find functions calling this function
+    autocmd FileType c,cpp map <silent> <M-m>c  :call CscopeFind('c', expand('<cword>'), 'n')<CR>
+    " t: Find this text string
+    autocmd FileType c,cpp map <silent> <M-m>t  :call CscopeFind('t', expand('<cword>'), 'n')<CR>
+    " e: Find this egrep pattern
+    autocmd FileType c,cpp map <silent> <M-m>e  :call CscopeFind('e', expand('<cword>'), 'n')<CR>
+    " f: Find this file
+    autocmd FileType c,cpp map <silent> <M-m>f  :call CscopeFind('f', expand('<cword>'), 'n')<CR>
+    " i: Find files #including this file
+    autocmd FileType c,cpp map <silent> <M-m>i  :call CscopeFind('i', expand('<cword>'), 'n')<CR>
+augroup END
 " --- Python ---
 "autocmd FileType python set completeopt-=preview " раскомментируйте, в случае, если не надо, чтобы jedi-vim показывал документацию по методу/классу
 autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8
@@ -291,7 +346,6 @@ autocmd BufNewFile,BufRead *.mako setlocal ft=mako
 autocmd BufNewFile,BufRead *.tmpl setlocal ft=htmljinja
 autocmd BufNewFile,BufRead *.py_tmpl setlocal ft=python
 autocmd FileType html,htmldjango,htmljinja,eruby,mako let b:closetag_html_style=1
-autocmd FileType html,xhtml,xml,htmldjango,htmljinja,eruby,mako source ~/.vim/scripts/closetag.vim
 
 " --- CSS ---
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
@@ -299,34 +353,6 @@ autocmd FileType css setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
 
 " --- YUML ---
 autocmd FileType yml,yaml setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-" Key for manual check of python code
-augroup python_autocmds
-    autocmd!
-    autocmd FileType python nnoremap <F5> :ConqueTermSplit ipython<CR>
-    autocmd FileType python nnoremap <F6> :exe "ConqueTermSplit ipython " . expand("%")<CR>
-augroup END
-
-" Key for manual check of python code
-augroup c_cpp_autocmds
-    autocmd!
-    " s: Find this C symbol
-    autocmd FileType c,cpp map <silent> <M-m>s  :call CscopeFind('s', expand('<cword>'), 'n')<CR>
-    " g: Find this definition
-    autocmd FileType c,cpp map <silent> <M-m>g  :call CscopeFind('g', expand('<cword>'), 'n')<CR>
-    " d: Find functions called by this function
-    autocmd FileType c,cpp map <silent> <M-m>d  :call CscopeFind('d', expand('<cword>'), 'n')<CR>
-    " c: Find functions calling this function
-    autocmd FileType c,cpp map <silent> <M-m>c  :call CscopeFind('c', expand('<cword>'), 'n')<CR>
-    " t: Find this text string
-    autocmd FileType c,cpp map <silent> <M-m>t  :call CscopeFind('t', expand('<cword>'), 'n')<CR>
-    " e: Find this egrep pattern
-    autocmd FileType c,cpp map <silent> <M-m>e  :call CscopeFind('e', expand('<cword>'), 'n')<CR>
-    " f: Find this file
-    autocmd FileType c,cpp map <silent> <M-m>f  :call CscopeFind('f', expand('<cword>'), 'n')<CR>
-    " i: Find files #including this file
-    autocmd FileType c,cpp map <silent> <M-m>i  :call CscopeFind('i', expand('<cword>'), 'n')<CR>
-    autocmd FileType c,cpp map <silent> <M-m>l  :call ToggleLocationList()<CR>
-augroup END
 "**********************************************************************************************************************
 "                       KEY MAPPING
 "**********************************************************************************************************************
@@ -355,12 +381,9 @@ inoremap <M-i> <Right><ESC><Up>
 inoremap <M-j> <Left>
 inoremap <M-k> <Right><ESC><Down>
 inoremap <M-l> <Right>
+"inoremap <expr>  <M-i> pumvisible() ? "\<Up>" : "\<Right>\<ESC>\<Up>"
+"inoremap <expr>  <M-k> pumvisible() ? "\<Down>" : "\<Right>\<ESC>\<Down>"
 
-inoremap <expr>  <M-i> pumvisible() ? "\<Up>" : "\<Right>\<ESC>\<Up>"
-inoremap <expr>  <M-k> pumvisible() ? "\<Down>" : "\<Right>\<ESC>\<Down>"
-
-map  / <Plug>(easymotion-sn)
-omap / <Plug>(easymotion-tn)
 map   l <Plug>(easymotion-lineforward)
 map   k <Plug>(easymotion-j)
 map   i <Plug>(easymotion-k)
@@ -386,14 +409,15 @@ else
     noremap <M-K> 10<Down>
     noremap <M-L> $<Right>
 
-    noremap! <M-I> <C-o>10<Up>
-    noremap! <M-J> <C-o><Home>
-    noremap! <M-K> <C-o>10<Down>
-    noremap! <M-L> <C-o>$<C-o><Right>
+    noremap! <M-I> <ESC>10<Up>
+    noremap! <M-J> <ESC><Home>
+    noremap! <M-K> <ESC>10<Down>
+    noremap! <M-L> <ESC>$<C-o><Right>
 endif
 " Find key
 nnoremap <M-q> *N
-inoremap <M-q> <C-o>*
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
 """""""""""""""""""""""""""""""""""""
 "Edit keys
 """""""""""""""""""""""""""""""""""""
@@ -447,14 +471,15 @@ function! ChangeVisualModInLoop()
     let l:next_mode = l:current_mode 
     set noignorecase
     echo l:current_mode
+
     if 'V' == l:current_mode
-        let l:next_mode = 'v'
+        let l:next_mode = ''
     endif
     if '' == l:current_mode
-        let l:next_mode = 'V'
+        let l:next_mode = 'v'
     endif
     if 'v' == l:current_mode
-        let l:next_mode = ''
+        let l:next_mode = 'V'
     endif
     if 'i' == l:current_mode
         let l:next_mode = "\<ESC>\<Right>V"
@@ -479,6 +504,15 @@ nmap <silent> + <C-W>+
 nmap <silent> _ <C-W>-
 
 "navigation between panels
+function! VSplit()
+  if bufname("%") == ""
+    silent keepalt botright vertical split
+  else
+    let pos = getpos('.')
+    silent keepalt botright vertical split %
+    call cursor(pos[1],pos[0])
+  endif
+endfunction
 
 if ! has('nvim')
     inoremap <silent> wj   <C-o>:wincmd h <CR>
@@ -486,7 +520,9 @@ if ! has('nvim')
     inoremap <silent> wi   <C-o>:wincmd k <CR>
     inoremap <silent> wk   <C-o>:wincmd j <CR>
     inoremap <silent> ws   <C-o>:wincmd s <CR>
-    inoremap <silent> wv   <C-o>:wincmd v <CR>
+    inoremap <silent> wv   <C-o>:call VSplit() <CR>
+    inoremap <silent> ws     <C-o>:wincmd s <CR>
+    inoremap <silent> wv     <C-o>:call VSplit() <CR>
     inoremap <silent> wq   <C-o>:q <CR>
 
     noremap <silent> wj    :wincmd h <CR>
@@ -494,7 +530,9 @@ if ! has('nvim')
     noremap <silent> wi    :wincmd k <CR>
     noremap <silent> wk    :wincmd j <CR>
     noremap <silent> ws    :wincmd s <CR>
-    noremap <silent> wv    :wincmd v <CR>
+    noremap <silent> wv    :call VSplit() <CR>
+    noremap <silent> ws      :wincmd s <CR>
+    noremap <silent> wv      :call VSplit() <CR>
     noremap <silent> wq    :q <CR>
 else
     inoremap <silent> <M-w><M-j>   <C-o>:wincmd h <CR>
@@ -502,7 +540,9 @@ else
     inoremap <silent> <M-w><M-i>   <C-o>:wincmd k <CR>
     inoremap <silent> <M-w><M-k>   <C-o>:wincmd j <CR>
     inoremap <silent> <M-w><M-s>   <C-o>:wincmd s <CR>
-    inoremap <silent> <M-w><M-v>   <C-o>:wincmd v <CR>
+    inoremap <silent> <M-w><M-v>   <C-o>:call VSplit() <CR>
+    inoremap <silent> <M-w>s       <C-o>:wincmd s <CR>
+    inoremap <silent> <M-w>v       <C-o>:call VSplit() <CR>
     inoremap <silent> <M-w><M-q>   <C-o>:q <CR>
 
     noremap <silent> <M-w><M-j>    :wincmd h <CR>
@@ -510,7 +550,9 @@ else
     noremap <silent> <M-w><M-i>    :wincmd k <CR>
     noremap <silent> <M-w><M-k>    :wincmd j <CR>
     noremap <silent> <M-w><M-s>    :wincmd s <CR>
-    noremap <silent> <M-w><M-v>    :wincmd v <CR>
+    noremap <silent> <M-w><M-v>    :call VSplit() <CR>
+    noremap <silent> <M-w>s        :wincmd s <CR>
+    noremap <silent> <M-w>v        :call VSplit() <CR>
     noremap <silent> <M-w><M-q>    :q <CR>
 endif
 
@@ -519,8 +561,6 @@ vnoremap <silent> <C-W><Up>     <C-W><Up>
 vnoremap <silent> <C-W><Down>   <C-W><Down>
 vnoremap <silent> <C-W><Right>  <C-W><Right>
 vnoremap <silent> <C-W><Left>   <C-W><Left>
-
-map <silent> <C-\>v  :Ag<CR>
 
 map <silent> <F1>       :TaskList<CR>
 "Open/close directory tree
@@ -543,31 +583,10 @@ inoremap <F8>            <C-o>:noh<CR>
 
 "build of cscope DB
 map <silent> <F11>  :cs reset <CR> 
-map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.sh -f ./.BookMarks & <CR>
+map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.sh -f ./.BookMarks<CR> :cs reset<CR>
 
 "save file
 nnoremap <silent> <M-s>     :w! <CR>
 inoremap <silent> <M-s>     <ESC>:w! <CR>
 inoremap <silent> <Insert>  <ESC>
-"**********************************************************************************************************************
-" OmniCppComplete
-"let OmniCpp_NamespaceSearch = 1
-"let OmniCpp_GlobalScopeSearch = 1
-"let OmniCpp_ShowAccess = 1
-"let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-"let OmniCpp_MayCompleteDot = 1 " autocomplete after .
-"let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
-"let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
-"let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-"set complete-=i
-" " automatically open and close the popup menu / preview window
-"au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-"set completeopt=menuone,menu,longest,preview
-"autocmd FileType cpp set omnifunc=omni#cpp#complete#Main
-"autocmd FileType c set omnifunc=ccomplete#Complete
-"**********************************************************************************************************************
-" Complete longest common string, then each full match
-" enable this for bash compatible behaviour
-" set wildmode=longest,full
-
 "/etc/vimrc ends here 
