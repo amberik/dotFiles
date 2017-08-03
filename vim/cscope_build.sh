@@ -45,19 +45,20 @@ do
     esac
 done
 
-if ! [ -r $file ]; then
+if ! [[ -r $file ]]; then
     echo "Error: File $file does not exists.";
     exit 1;
 fi
 
 buff=`cut -d' ' -f2- $file`
-
 while read line
 do
-    if [[ -d $line ]]; then
-        paths+="$line";
+    line=`eval "echo $line"`
+    if test -d $line
+    then
+        paths+="$line ";
     else
-        echo "\"$line\" is not a directory"
+        echo "\"$line\" - is not a directory"
     fi
 done <<< $buff
 

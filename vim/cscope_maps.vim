@@ -132,7 +132,7 @@ endfunction
 
 
 function! GoToLocationList()
-  lw
+  rightbelow lw
   exe ':call MapLocationList()'
 endfunction
 
