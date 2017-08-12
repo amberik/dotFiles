@@ -400,19 +400,20 @@ if ! has('nvim')
     noremap L <End>
 
     noremap! I <C-o>10<Up>
-    noremap! J <C-o>B
+    noremap! J <C-o><Home>
     noremap! K <C-o>10<Down>
-    noremap! L <C-o>w
+    noremap! L <C-o><End>
 else
     noremap <M-I> 10<Up>
-    noremap <M-J> <Home>
+"    noremap <M-J> <Home>
+    noremap <M-J> ^
     noremap <M-K> 10<Down>
-    noremap <M-L> $<Right>
+    noremap <M-L> g_<Right>
 
     noremap! <M-I> <ESC>10<Up>
-    noremap! <M-J> <ESC><Home>
+    noremap! <M-J> <ESC>^
     noremap! <M-K> <ESC>10<Down>
-    noremap! <M-L> <ESC>$<C-o><Right>
+    noremap! <M-L> <ESC>g_<Right>
 endif
 " Find key
 nnoremap <M-q> *N
