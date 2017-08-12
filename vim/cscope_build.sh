@@ -22,7 +22,7 @@ build()
         then
             echo "Skipping path: $path"
         else
-            echo "start build search dir list in $path"
+            echo "start build search dir list in directory $path"
             find $path -name \*.h -print -o -name \*.cpp -print -o -name \*.c -print -o -name \*.cxx -print -o -name \*.hpp -print -o -name \*.hxx -print >> ./cscope.files;
         fi
     done
@@ -60,7 +60,7 @@ do
     else
         echo "\"$line\" - is not a directory"
     fi
-done <<< "$buff"
+done <<< $buff
 
 if [[ -z "$paths" ]]; then
     echo "Error: In the file \"$file\" there is no valid paths for building tags";
