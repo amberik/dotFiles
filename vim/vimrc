@@ -593,8 +593,7 @@ inoremap <silent> <Insert>  <ESC>
 "/etc/vimrc ends here
 
 if filereadable("./.vimrc_local")
-    echo "Load local vimrc"
-    so "./.vimrc_local"
+    so ./.vimrc_local
 endif
 
 
