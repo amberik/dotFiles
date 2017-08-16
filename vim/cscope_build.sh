@@ -50,17 +50,18 @@ if ! [[ -r $file ]]; then
     exit 1;
 fi
 
-buff=`cut -d' ' -f2- $file`
-while read line
+readarray -t lines <<<$(cut -d' ' -f2- $file)
+for line in $lines
 do
-    line=`eval "echo $line"`
-    if test -d $line
+    echo $line
+    line=$(eval "echo $line")
+    if [[ -d $line ]]
     then
         paths+="$line ";
     else
         echo "\"$line\" - is not a directory"
     fi
-done <<< $buff
+done
 
 if [[ -z "$paths" ]]; then
     echo "Error: In the file \"$file\" there is no valid paths for building tags";
