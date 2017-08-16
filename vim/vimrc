@@ -590,4 +590,11 @@ map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.sh -f ./.BookMarks<CR> :cs re
 nnoremap <silent> <M-s>     :w! <CR>
 inoremap <silent> <M-s>     <ESC>:w! <CR>
 inoremap <silent> <Insert>  <ESC>
-"/etc/vimrc ends here 
+"/etc/vimrc ends here
+
+if filereadable("./.vimrc_local")
+    echo "Load local vimrc"
+    so "./.vimrc_local"
+endif
+
+
