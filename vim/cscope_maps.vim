@@ -137,8 +137,8 @@ function! GoToLocationList()
 endfunction
 
 function! MapLocationList()
-  exe "nnoremap <silent> <buffer> <space>    :call Preview_word()<cr>"
-  exe "nnoremap <silent> <buffer> <cr> :call Go_word()<cr>"
+  exe "nnoremap <silent> <buffer> <space>   :call Preview_word()<cr>"
+  exe "nnoremap <silent> <buffer> <cr>      :call Go_word()<cr>"
 endfunction
 
 function! Highlight_word()
