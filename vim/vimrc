@@ -94,6 +94,7 @@ set rtp+=~/dotFiles/vim/
 set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/.vim/bundle/vim-airline-themes/
 
+
 " Set color scheme
 colorscheme fu_ex
 
@@ -233,6 +234,7 @@ call vundle#begin()
     "definition of the name under the cursor.
     let g:jedi#usages_command = '<leader>]'
 call vundle#end()                    " required
+
 
 function! jedi#add_goto_window(len) abort
     set lazyredraw
@@ -596,4 +598,21 @@ if filereadable("./.vimrc_local")
     so ./.vimrc_local
 endif
 
+"Change cursor shape
+if has('nvim')
+  let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  let $TMUX_TUI_ENABLE_SHELL_CURSOR=1
+  set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+endif
+if exists('$TMUX')
+    " tmux will only forward escape sequences to the terminal if surrounded by a DCS sequence
+    let &t_SI .= "\<Esc>Ptmux;\<Esc>\<Esc>[6 q\<Esc>\\"
+    let &t_EI .= "\<Esc>Ptmux;\<Esc>\<Esc>[0 q\<Esc>\\"
+    autocmd VimLeave * silent !echo -ne "\<Esc>Ptmux;\<Esc>\<Esc>[0 q\033\\"
+else
+    let &t_SI .= "\<Esc>[6 q"
+    let &t_EI .= "\<Esc>[0 q"
+    autocmd VimLeave * silent !echo -ne "\<Esc>[0 q"
+endif
 
