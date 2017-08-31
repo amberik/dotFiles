@@ -18,7 +18,7 @@ updateConfigFile ./git/gitconfig ~/.gitconfig
 ln -s ~/.vim ~/.config/nvim
 updateConfigFile ./vim/vimrc ~/.config/nvim/init.vim
 
-if [ !  ~/antigen.zsh ] 
+if ! [[ -r  ~/antigen.zsh ]]
 then
     curl -L git.io/antigen > ~/antigen.zsh
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
