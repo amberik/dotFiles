@@ -110,6 +110,7 @@ call vundle#begin()
     Plugin 'ctrlp.vim'
     Plugin 'fugitive.vim'
     Plugin 'rking/ag.vim'
+    Plugin 'jszakmeister/vim-togglecursor'
     let g:ag_lhandler="rightbelow lw"
     map <M-m>m :LAg<CR>
     map <M-m><M-m> :LAg<CR>
@@ -600,19 +601,21 @@ endif
 
 "Change cursor shape
 if has('nvim')
-  let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  let $TMUX_TUI_ENABLE_SHELL_CURSOR=1
-  set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
-endif
-if exists('$TMUX')
-    " tmux will only forward escape sequences to the terminal if surrounded by a DCS sequence
-    let &t_SI .= "\<Esc>Ptmux;\<Esc>\<Esc>[6 q\<Esc>\\"
-    let &t_EI .= "\<Esc>Ptmux;\<Esc>\<Esc>[0 q\<Esc>\\"
-    autocmd VimLeave * silent !echo -ne "\<Esc>Ptmux;\<Esc>\<Esc>[0 q\033\\"
+      let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+      let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+      let $TMUX_TUI_ENABLE_SHELL_CURSOR=1
+"      set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+      set guicursor=
 else
-    let &t_SI .= "\<Esc>[6 q"
-    let &t_EI .= "\<Esc>[0 q"
-    autocmd VimLeave * silent !echo -ne "\<Esc>[0 q"
+    if exists('$TMUX')
+        " tmux will only forward escape sequences to the terminal if surrounded by a DCS sequence
+        let &t_SI .= "\<Esc>Ptmux;\<Esc>\<Esc>[6 q\<Esc>\\"
+        let &t_EI .= "\<Esc>Ptmux;\<Esc>\<Esc>[0 q\<Esc>\\"
+        autocmd VimLeave * silent !echo -ne "\<Esc>Ptmux;\<Esc>\<Esc>[0 q\033\\"
+    else
+        let &t_SI .= "\<Esc>[6 q"
+        let &t_EI .= "\<Esc>[0 q"
+        autocmd VimLeave * silent !echo -ne "\<Esc>[0 q"
+    endif
 endif
 
