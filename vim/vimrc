@@ -527,7 +527,7 @@ if ! has('nvim')
     inoremap <silent> wv   <C-o>:call VSplit() <CR>
     inoremap <silent> ws     <C-o>:wincmd s <CR>
     inoremap <silent> wv     <C-o>:call VSplit() <CR>
-    inoremap <silent> wq   <C-o>:q <CR>
+    inoremap <silent> wq   <ESC>:lclose<CR>:cclose<CR>:q<CR>
 
     noremap <silent> wj    :wincmd h <CR>
     noremap <silent> wl    :wincmd l <CR>
@@ -537,7 +537,7 @@ if ! has('nvim')
     noremap <silent> wv    :call VSplit() <CR>
     noremap <silent> ws      :wincmd s <CR>
     noremap <silent> wv      :call VSplit() <CR>
-    noremap <silent> wq    :q <CR>
+    noremap <silent> wq    :lclose<CR>:cclose<CR>:q<CR>
 else
     inoremap <silent> <M-w><M-j>   <C-o>:wincmd h <CR>
     inoremap <silent> <M-w><M-l>   <C-o>:wincmd l <CR>
@@ -547,7 +547,7 @@ else
     inoremap <silent> <M-w><M-v>   <C-o>:call VSplit() <CR>
     inoremap <silent> <M-w>s       <C-o>:wincmd s <CR>
     inoremap <silent> <M-w>v       <C-o>:call VSplit() <CR>
-    inoremap <silent> <M-w><M-q>   <C-o>:q <CR>
+    inoremap <silent> <M-w><M-q>   <ESC>:lclose<CR>:cclose<CR>:q<CR>
 
     noremap <silent> <M-w><M-j>    :wincmd h <CR>
     noremap <silent> <M-w><M-l>    :wincmd l <CR>
@@ -557,7 +557,7 @@ else
     noremap <silent> <M-w><M-v>    :call VSplit() <CR>
     noremap <silent> <M-w>s        :wincmd s <CR>
     noremap <silent> <M-w>v        :call VSplit() <CR>
-    noremap <silent> <M-w><M-q>    :q <CR>
+    noremap <silent> <M-w><M-q>    :lclose<CR>:cclose<CR>:q<CR>
 endif
 
 imap     <silent> <C-W>         <C-o><C-w>
@@ -604,8 +604,7 @@ if has('nvim')
       let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
       let $NVIM_TUI_ENABLE_TRUE_COLOR=1
       let $TMUX_TUI_ENABLE_SHELL_CURSOR=1
-"      set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
-      set guicursor=
+      set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 else
     if exists('$TMUX')
         " tmux will only forward escape sequences to the terminal if surrounded by a DCS sequence
