@@ -561,6 +561,8 @@ else
 endif
 
 imap     <silent> <C-W>         <C-o><C-w>
+imap     <silent> <M-w>         <C-o><C-w>
+map      <silent> <M-w>         <C-w>
 vnoremap <silent> <C-W><Up>     <C-W><Up>
 vnoremap <silent> <C-W><Down>   <C-W><Down>
 vnoremap <silent> <C-W><Right>  <C-W><Right>
