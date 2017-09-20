@@ -2,7 +2,7 @@ stty -ixon
 
 test -s ~/.alias && . ~/.alias || true
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-export PATH=$PATH:/home/cyc/bin:/usr/local/sbin:/usr/sbin
+export PATH=$PATH:/home/sergey/dotFiles/utils:/usr/local/sbin:/usr/sbin
 
 export NO_AWT_MITSHM=true
 export CSHEDIT=vim
