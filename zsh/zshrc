@@ -3,7 +3,7 @@ stty -ixon
 test -s ~/.alias && . ~/.alias || true
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 export GOROOT=$HOME/go1.X
-export PATH=$PATH:$GOROOT/bin:/usr/local/sbin:/usr/sbin
+export PATH=$PATH:$GOROOT/bin:/usr/local/sbin:/usr/sbin:$HOME/.local/bin
 
 export NO_AWT_MITSHM=true
 export CSHEDIT=vim

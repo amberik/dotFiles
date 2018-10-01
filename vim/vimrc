@@ -110,6 +110,7 @@ call vundle#begin()
     Plugin 'ctrlp.vim'
     Plugin 'fugitive.vim'
     Plugin 'rking/ag.vim'
+    Plugin 'haskell.vim'
     Plugin 'jszakmeister/vim-togglecursor'
     let g:ag_lhandler="rightbelow lw"
     map <M-m>m :LAg<CR>

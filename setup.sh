@@ -2,6 +2,12 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/" 
 
+sudo apt -y install python python3 gcc git curl wget ipython python-pip python3-pip neovim ghc
+pip2 install neovim
+pip3 install neovim
+curl -sSL https://get.haskellstack.org/ | sh
+stack install hsimport hdevtools
+
 function updateConfigFile () {
     sourceConfigFile=$1 
     configFile=$2
