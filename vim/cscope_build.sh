@@ -22,12 +22,16 @@ build()
         then
             echo "Skipping path: $path"
         else
-            echo "start build search dir list in directory $path"
-            find $path -name \*.h -print -o -name \*.cpp -print -o -name \*.c -print -o -name \*.cxx -print -o -name \*.hpp -print -o -name \*.hxx -print >> ./cscope.files;
+            if [[ -d $path ]]
+            then
+                echo "start build search dir list in directory $path"
+                find $path -name \*.h -print -o -name \*.cpp -print -o -name \*.c -print -o -name \*.cxx -print -o -name \*.hpp -print -o -name \*.hxx -print >> ./cscope.files;
+            fi
         fi
     done
     echo "start build DB"
-	cscope -RUbq 2>/dev/null;
+#	cscope -RUbq 2>/dev/null;
+	cscope -RUbq
     echo "finished"
 }
 
@@ -50,9 +54,8 @@ if ! [[ -r $file ]]; then
     exit 1;
 fi
 
-readarray -t lines <<<$(cut -d' ' -f2- $file)
-for line in $lines
-do
+while IFS= read -r line; 
+do 
     echo $line
     line=$(eval "echo $line")
     if [[ -d $line ]]
@@ -61,7 +64,7 @@ do
     else
         echo "\"$line\" - is not a directory"
     fi
-done
+done <<< $(cut -d ' ' -f2- $file)
 
 if [[ -z "$paths" ]]; then
     echo "Error: In the file \"$file\" there is no valid paths for building tags";
