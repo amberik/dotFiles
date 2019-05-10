@@ -41,7 +41,7 @@ set backspace=indent,eol,start
 set hlsearch
 
 " Enable mouse usage (all modes)
-set mouse=a        
+set mouse=nic        
 
 " Do smart case matching
 set smartcase
@@ -202,10 +202,57 @@ call vundle#begin()
 
     Plugin 'mitsuhiko/vim-python-combined'  " Combined Python 2/3 for Vim
                                             "  lints, highlighting, run and ipdb and more)
-    Plugin 'roxma/nvim-completion-manager'
-    if !has('nvim')
-        Plugin 'roxma/vim-hug-neovim-rpc'
+    
+    "Plugin 'roxma/nvim-completion-manager'
+    "if !has('nvim')
+    "    Plugin 'roxma/vim-hug-neovim-rpc'
+    "endif
+    Plugin 'eagletmt/neco-ghc'
+    Plugin 'Shougo/deoplete.nvim'
+    " deoplete options
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#enable_smart_case = 1
+    "
+    "" disable autocomplete by default
+    let b:deoplete_disable_auto_complete=1 
+    let g:deoplete_disable_auto_complete=1
+    "call deoplete#custom#buffer_option('auto_complete', v:false)
+    
+    if !exists('g:deoplete#omni#input_patterns')
+        let g:deoplete#omni#input_patterns = {}
     endif
+    
+    " Disable the candidates in Comment/String syntaxes.
+    "call deoplete#custom#source('_',
+    "            \ 'disabled_syntaxes', ['Comment', 'String'])
+    
+    autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+    
+    " set sources
+    let g:deoplete#sources = {}
+    let g:deoplete#sources.cpp = ['LanguageClient']
+    "let g:deoplete#sources.python = ['LanguageClient']
+    "let g:deoplete#sources.python3 = ['LanguageClient']
+    let g:deoplete#sources.c = ['LanguageClient']
+    "let g:deoplete#sources.haskell = ['LanguageClient']
+    let g:deoplete#sources.vim = ['vim']
+    inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+    
+    " ------------------------------------------------------------------------------
+    " Haskell
+    " ------------------------------------------------------------------------------
+    Plugin 'Hoogle'
+    let g:hoogle_search_count = 100
+    Plugin 'neovimhaskell/haskell-vim'
+    Plugin 'bitc/vim-hdevtools'
+    "let g:haskellmode_completion_ghc = 0
+    "autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+    au FileType haskell nnoremap <buffer> <F1> :HdevtoolsInfo<CR>
+    au FileType haskell nnoremap <buffer> <F5> :HdevtoolsType<CR>
+    au FileType haskell nnoremap <buffer> <F4> :HdevtoolsClear<CR>
+    " ------------------------------------------------------------------------------
+    " JEDI settings
+    " ------------------------------------------------------------------------------
     " ------------------------------------------------------------------------------
     " JEDI settings
     " ------------------------------------------------------------------------------
@@ -421,27 +468,30 @@ else
 endif
 " Find key
 nnoremap <M-q> *N
+vnoremap // y/<C-R>"<CR>
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 """""""""""""""""""""""""""""""""""""
 "Edit keys
 """""""""""""""""""""""""""""""""""""
 " Copy
-vnoremap <M-u> yi
+vnoremap <M-u> "ayi
+nnoremap yy    "ayy
 
 "Paste mode
 nnoremap <M-p> :set invpaste paste?<CR>
 set pastetoggle=<M-p>
 set showmode
 " Paste
-inoremap <M-o> <Left><C-o>p
-nnoremap <M-o> p
+inoremap <M-o> <Left><C-o>"ap
+nnoremap <M-o> "ap
 
 " Backspace
 noremap  <M-d> d<Left>i
 noremap! <M-d> <Backspace>
 " DELETE
 noremap  <M-f>  d<Right>i
+noremap  dd     "add
 noremap! <M-f> <Del>
 
 " Undo
@@ -608,6 +658,9 @@ if has('nvim')
       let $NVIM_TUI_ENABLE_TRUE_COLOR=1
       let $TMUX_TUI_ENABLE_SHELL_CURSOR=1
       set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+      let &t_SI .= "\e[6 q"
+      let &t_EI .= "\e[0 q"
+      autocmd VimLeave * silent !echo -ne "\<Esc>[0 q"
 else
     if exists('$TMUX')
         " tmux will only forward escape sequences to the terminal if surrounded by a DCS sequence
