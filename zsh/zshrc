@@ -49,26 +49,8 @@ alias l='ls -lah'
 alias grep='grep --color -n'                                             
 alias df='df -h'
 alias vim='nvim'
-alias ssh='ssh_int'
-ssh_int()
-{
-    if ! [ $# -gt 1 ]
-    then
-        VARS=""
-        # Add to array more VARS which should be passed to ssh session
-        VARS_TO_PASS=(KONSOLE_PROFILE_NAME)
-        for VAR_TO_PASS in ${VARS_TO_PASS} 
-        do
-            if ! [ "${(P)VAR_TO_PASS}" = "" ]
-            then
-                VARS+="$VAR_TO_PASS=${(P)VAR_TO_PASS} "
-            fi
-        done
-        command ssh -t $1 $VARS "\$(echo \$0)"
-    else
-        command ssh $@
-    fi
-}
+alias todo='nvim ~/TODO_Items'
+
 
 # Use modern completion system                                                                        
 autoload -Uz compinit                                                                                 

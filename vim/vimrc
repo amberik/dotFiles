@@ -590,7 +590,7 @@ inoremap <F8>            <C-o>:noh<CR>
 
 "build of cscope DB
 map <silent> <F11>  :cs reset <CR> 
-map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.sh -f ./.BookMarks<CR> :cs reset<CR>
+map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.py <CR> :cs reset<CR>
 
 "save file
 nnoremap <silent> <M-s>     :w! <CR>
