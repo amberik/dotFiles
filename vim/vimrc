@@ -257,7 +257,7 @@ call vundle#begin()
     " JEDI settings
     " ------------------------------------------------------------------------------
     Plugin 'davidhalter/jedi-vim'           " Jedi-vim autocomplete plugin
-"    set splitbelow
+    "set splitbelow
     let g:jedi#popup_select_first = 1
     let g:jedi#show_call_signatures = 0
     let g:jedi#auto_close_doc = 1
@@ -285,21 +285,21 @@ call vundle#begin()
 call vundle#end()                    " required
 
 
-function! jedi#add_goto_window(len) abort
-    set lazyredraw
-    cclose
-    let height = g:jedi#quickfix_window_height
-    execute 'belowright copen '.height
-    set nolazyredraw
-    if g:jedi#use_tabs_not_buffers == 1
-        noremap <buffer> <CR> :call jedi#goto_window_on_enter()<CR>
-    endif
-    augroup jedi_goto_window
-        au!
-        au WinLeave <buffer> q  " automatically leave, if an option is chosen
-    augroup END
-    redraw!
-endfunction
+"function! jedi#add_goto_window(len) 
+"    set lazyredraw
+"    cclose
+"    let height = g:jedi#quickfix_window_height
+"    execute 'belowright copen '.height
+"    set nolazyredraw
+"    if g:jedi#use_tabs_not_buffers == 1
+"        noremap <buffer> <CR> :call jedi#goto_window_on_enter()<CR>
+"    endif
+"    augroup jedi_goto_window
+"        au!
+"        au WinLeave <buffer> q  " automatically leave, if an option is chosen
+"    augroup END
+"    redraw!
+"endfunction
 
 filetype on
 filetype plugin on

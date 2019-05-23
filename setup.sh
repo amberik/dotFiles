@@ -2,11 +2,14 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/" 
 
-sudo apt -y install python python3 gcc git curl wget ipython python-pip python3-pip neovim ghc
+sudo apt -y install python python3 gcc git curl wget ipython python-pip python3-pip neovim ghc tmux zsh fonts-hack silversearcher-ag tree npm
 pip2 install neovim
 pip3 install neovim
-curl -sSL https://get.haskellstack.org/ | sh
-stack install hsimport hdevtools
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+if ! [[ -r  ~/antigen.zsh ]]
+then
+    curl -L git.io/antigen > ~/antigen.zsh
+fi
 
 function updateConfigFile () {
     sourceConfigFile=$1 
@@ -24,8 +27,7 @@ updateConfigFile ./git/gitconfig ~/.gitconfig
 ln -s ~/.vim ~/.config/nvim
 updateConfigFile ./vim/vimrc ~/.config/nvim/init.vim
 
-if ! [[ -r  ~/antigen.zsh ]]
-then
-    curl -L git.io/antigen > ~/antigen.zsh
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-fi
+sudo npm install -g notify-cli
+
+curl -sSL https://get.haskellstack.org/ | sh
+stack install hsimport hdevtools

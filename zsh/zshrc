@@ -47,11 +47,16 @@ antigen apply
 
 alias ls='ls --color=auto'                                                   
 alias la='ls -A'                                                             
-alias l='ls -lah'                                                   
+alias l='ls -lah'
+alias ps='ps auxf'
 alias grep='grep --color -n'                                             
 alias df='df -h'
 alias vim='nvim'
 alias todo='nvim ~/TODO_Items'
+alias t='tree -h' 
+alias tf='tree -f' 
+alias ta='tree -ha'
+alias df='findmnt'
 
 
 # Use modern completion system                                                                        
