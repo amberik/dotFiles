@@ -75,3 +75,103 @@ bindkey "^[J" backward-word
 bindkey "^[f" delete-char
 bindkey "^[d" backward-delete-char                                                           
 
+
+## NET ###############################################################
+host.net.public_ip() {
+    ip -o addr show dev $(host.net.public_netdev) | grep 'inet ' | sed -e 's/.* inet \([^/]*\)\/.*/\1/'
+}
+host.net.ips(){
+    ip -o addr | grep 'inet ' | sed -e 's/.* inet \([^/]*\)\/.*/\1/'
+}
+host.net.public_netdev(){
+    route | egrep '^default' | head -1 | awk '{print $NF}'
+}
+host.net.names (){
+    hostname -A | tr ' ' '\n'
+}
+## MEMO ###############################################################
+host.memo.swap.off(){
+    sudo swapoff -a
+}
+host.memo.swap.on(){
+    sudo swapon -a
+}
+## TOOLS ###############################################################
+tools.top(){
+    htop $@
+}
+tools.editor(){
+    vim $@
+}
+tools.notify(){
+    ntfy $@
+}
+tools.notify.info(){
+    tools.notify -t "Info:" send "$@"
+}
+tools.notify.message(){
+    tools.notify -t "Message:" send "$@"
+}
+tools.notify.failed(){
+    tools.notify -t "Failed:"  send "$@"
+}
+tools.notify.success(){
+    tools.notify -t "Success:" send "$@"
+}
+tools.mount_tree(){
+    findmnt
+}
+## DOCKER ###############################################################
+docker.start(){
+    docker start $@
+}
+docker.stop(){
+    docker stop $@
+}
+docker.pull(){
+    docker pull $@
+}
+docker.exec(){
+    docker exec -it $@
+}
+docker.run(){
+    docker run $@
+}
+docker.rm(){
+    docker rm -f $1
+}
+docker.rm(){
+    docker rm -f $1
+}
+docker.ps(){
+    docker ps -a
+}
+docker.images(){
+    docker images
+}
+## CONFIG ###############################################################
+config.zsh.common(){
+    tools.editor ~/.zshrc
+}
+config.zsh.local(){
+    tools.editor ~/.zshrc_custom.zsh    
+}
+config.ntfy(){
+    mkdir -p ~/.config/ntfy/
+    tools.editor .config/ntfy/ntfy.yml    
+}
+config.tmux(){
+    tools.editor ~/.tmux.conf
+}
+config.vim.common(){
+    tools.editor ~/.vimrc
+}
+config.vim.local(){
+    tools.editor ./.vimrc_local
+}
+config.deply.setup(){
+    tools.editor ./dotFiles/setup.sh
+}
+
+source ~/.zshrc_custom.zsh
+
