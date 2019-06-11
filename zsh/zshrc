@@ -121,6 +121,15 @@ tools.notify.success(){
 tools.mount_tree(){
     findmnt
 }
+tools.ssh.get_pub_key(){
+    local ssh_pub_key_file=~/.ssh/id_rsa.pub 
+    if ! [[ -f $ssh_pub_key_file ]]; then
+        ssh-keygen -t rsa -b 4096
+        eval "$(ssh-agent -s)"
+        ssh-add ~/.ssh/id_rsa
+    fi
+    cat $ssh_pub_key_file
+}
 ## DOCKER ###############################################################
 docker.start(){
     docker start $@
