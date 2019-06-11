@@ -169,6 +169,15 @@ config.vim.common(){
 config.vim.local(){
     tools.editor ./.vimrc_local
 }
+config.vim.key_map(){
+    tools.editor ./dotFiles/vim/key_map.vim
+}
+config.vim.plugins(){
+    tools.editor ./dotFiles/vim/plugin_list.vim
+}
+config.vim.plugin_config(){
+    tools.editor ./dotFiles/vim/plugin_config.vim
+}
 config.deply.setup(){
     tools.editor ./dotFiles/setup.sh
 }
