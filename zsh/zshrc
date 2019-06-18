@@ -1,6 +1,7 @@
 stty -ixon
 
 test -s ~/.alias && . ~/.alias || true
+export DEVEL_DIR=~/devel/ 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 export GOROOT=$HOME/go1.X
 export CABALROOT=$HOME/.cabal
@@ -155,9 +156,69 @@ docker.rm(){
 docker.ps(){
     docker ps -a
 }
+docker.pid(){
+    docker inspect --format '{{ .State.Pid }}' "$@"
+}
+docker.ip(){
+    docker inspect --format '{{ .NetworkSettings.IPAddress }}' "$@"
+}
 docker.images(){
     docker images
 }
+## TensorFlow Ddcker ####################################################
+TF_CONTAINER=tensorflow
+tf.docker.run() {                                                                                    
+    local TAG=nightly-py3-jupyter                                                                    
+    local SOURCEDIR=$(realpath $DEVEL_DIR)/tensor_flow/src                                           
+    local SHAREDIR=$(realpath $DEVEL_DIR)/tensor_flow/share                                          
+    if [ ! "$(docker ps -q -f name=$TF_CONTAINER)" ]; then                                           
+        if [ ! "$(docker ps -aq -f status=exited -f name=$TF_CONTAINER)" ]; then                     
+            tf.docker.update                                                                         
+            mkdir -p $SOURCEDIR $SHAREDIR                                                            
+            docker.run -d \
+                -u $(id -u):$(id -g) \
+                -v $SOURCEDIR:/tf/src \
+                -v $SHAREDIR:/tf/share \
+                -v /tmp/.X11-unix:/tmp/.X11-unix \
+                -e DISPLAY=${DISPLAY} \
+                --publish 8888:8888/tcp \
+                --dns 10.44.0.1 \
+                --device /dev/snd \
+                --ipc host \
+                --name $TF_CONTAINER \
+                tensorflow/$TF_CONTAINER:$TAG /bin/sh -c "while true; do sleep 1000000; done"     
+        else                                                                                         
+            tf.docker.start                                                                          
+        fi                                                                                           
+    fi                                                                                               
+}                                                                                                    
+###################################################################################################  
+tf.docker.exec() {                                                                                   
+    if [ ! "$(docker ps -q -f name=$TF_CONTAINER)" ]; then                                           
+        tf.docker.run                                                                                
+    fi                                                                                               
+    docker.exec $TF_CONTAINER $@                                                                     
+}                                                                                                    
+tf.docker.jupyter() {                                                                                   
+    tf.docker.exec bash -c "jupyter-notebook --ip $(docker.ip $TF_CONTAINER)"                                                        
+}                                                                                                    
+#################################################################                                    
+tf.docker.update() {                                                                                 
+    local TAG=nightly-py3-jupyter                                                                    
+    docker.pull tensorflow/$TF_CONTAINER:$TAG                                                        
+}                                                                                                    
+#################################################################                                    
+tf.docker.start() {                                                                                  
+    docker.start $TF_CONTAINER                                                                       
+}                                                                                                    
+#################################################################                                    
+tf.docker.stop() {                                                                                   
+    docker.stop $TF_CONTAINER                                                                        
+}                                                                                                    
+#################################################################                                    
+tf.docker.rm() {                                                                                     
+    docker.rm $TF_CONTAINER                                                                          
+}                                                                                                    
 ## CONFIG ###############################################################
 config.zsh.common(){
     tools.editor ~/.zshrc
