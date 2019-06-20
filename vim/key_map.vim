@@ -155,20 +155,28 @@ if ! has('nvim')
     noremap <silent> wv      :call VSplit() <CR>
     noremap <silent> wq    :lclose<CR>:cclose<CR>:q<CR>
 else
-    inoremap <silent> <M-w><M-j>   <C-o>:wincmd h <CR>
-    inoremap <silent> <M-w><M-l>   <C-o>:wincmd l <CR>
-    inoremap <silent> <M-w><M-i>   <C-o>:wincmd k <CR>
-    inoremap <silent> <M-w><M-k>   <C-o>:wincmd j <CR>
+    inoremap <silent> <M-w><M-j>   <C-o>:TmuxNavigateLeft <CR>
+    inoremap <silent> <M-w><M-l>   <C-o>:TmuxNavigateRight <CR>
+    inoremap <silent> <M-w><M-i>   <C-o>:TmuxNavigateUp <CR>
+    inoremap <silent> <M-w><M-k>   <C-o>:TmuxNavigateDown <CR>
+    "inoremap <silent> <M-w><M-j>   <C-o>:wincmd h <CR>
+    "inoremap <silent> <M-w><M-l>   <C-o>:wincmd l <CR>
+    "inoremap <silent> <M-w><M-i>   <C-o>:wincmd k <CR>
+    "inoremap <silent> <M-w><M-k>   <C-o>:wincmd j <CR>
     inoremap <silent> <M-w><M-s>   <C-o>:wincmd s <CR>
     inoremap <silent> <M-w><M-v>   <C-o>:call VSplit() <CR>
     inoremap <silent> <M-w>s       <C-o>:wincmd s <CR>
     inoremap <silent> <M-w>v       <C-o>:call VSplit() <CR>
     inoremap <silent> <M-w><M-q>   <ESC>:lclose<CR>:cclose<CR>:q<CR>
 
-    noremap <silent> <M-w><M-j>    :wincmd h <CR>
-    noremap <silent> <M-w><M-l>    :wincmd l <CR>
-    noremap <silent> <M-w><M-i>    :wincmd k <CR>
-    noremap <silent> <M-w><M-k>    :wincmd j <CR>
+    noremap <silent> <M-w><M-j>    :TmuxNavigateLeft<CR>
+    noremap <silent> <M-w><M-l>    :TmuxNavigateRight<CR>
+    noremap <silent> <M-w><M-i>    :TmuxNavigateUp<CR>
+    noremap <silent> <M-w><M-k>    :TmuxNavigateDown<CR>
+    "noremap <silent> <M-w><M-j>    :wincmd h <CR>
+    "noremap <silent> <M-w><M-l>    :wincmd l <CR>
+    "noremap <silent> <M-w><M-i>    :wincmd k <CR>
+    "noremap <silent> <M-w><M-k>    :wincmd j <CR>
     noremap <silent> <M-w><M-s>    :wincmd s <CR>
     noremap <silent> <M-w><M-v>    :call VSplit() <CR>
     noremap <silent> <M-w>s        :wincmd s <CR>

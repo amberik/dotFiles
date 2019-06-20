@@ -33,4 +33,5 @@ call vundle#begin()
     Plugin 'neovimhaskell/haskell-vim'
     Plugin 'bitc/vim-hdevtools'
     Plugin 'davidhalter/jedi-vim'           " Jedi-vim autocomplete plugin
+    Plugin 'christoomey/vim-tmux-navigator'
 call vundle#end()                    " required

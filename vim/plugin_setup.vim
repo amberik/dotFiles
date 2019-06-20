@@ -108,3 +108,9 @@ let g:ConqueTerm_StartMessages = 0
 let g:ConqueTerm_CloseOnEnd = 0
 let g:indentLine_color_term = 236
 let g:indentLine_char = '┋'
+" ------------------------------------------------------------------------------
+" TMUX integration
+" ------------------------------------------------------------------------------
+let g:tmux_navigator_disable_when_zoomed = 1
+let g:tmux_navigator_no_mappings = 1
+
