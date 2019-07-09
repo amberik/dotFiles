@@ -1,15 +1,27 @@
 stty -ixon
 
 test -s ~/.alias && . ~/.alias || true
-export DEVEL_DIR=~/devel/ 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
-export GOROOT=$HOME/go1.X
-export CABALROOT=$HOME/.cabal
-export cabal_helper_libexecdir=$CABALROOT/x86_64-linux-ghc-8.0.2/cabal-helper-0.7.3.0/
-export PATH=$PATH:$GOROOT/bin:/usr/local/sbin:/usr/sbin:$CABALROOT/bin:$HOME/.local/bin
 
+export USER_PATH=$HOME/.local/bin/
+export USER_LD_LIBRARY_PATH=$HOME/.local/lib/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/:$USER_LD_LIBRARY_PATH
+export PATH=$PATH:/usr/local/sbin:/usr/sbin:$USER_PATH
+# Go language
+export GOROOT=$HOME/go1.X
+export PATH=$PATH:$GOROOT/bin/
+# Haskell language
+export CABALROOT=$HOME/.cabal
+export PATH=$PATH:$CABALROOT/bin/
+export cabal_helper_libexecdir=$CABALROOT/x86_64-linux-ghc-8.0.2/cabal-helper-0.7.3.0/
+
+export DEVEL_DIR=~/devel/
+
+
+export VISUAL='nvim' 
+export CSHEDIT="$VISUAL"
+export EDITOR="$VISUAL"
 export NO_AWT_MITSHM=true
-export CSHEDIT=vim
+
 if [ "$TMUX" = "" ]
 then
     export TERM=xterm-256color
@@ -26,9 +38,6 @@ select-word-style bash
 HISTSIZE=10000                                                               
 SAVEHIST=10000                                                               
 HISTFILE=~/.zsh_history
-
-export VISUAL='nvim' 
-export EDITOR="$VISUAL"
 
 source ~/antigen.zsh
 # Load the oh-my-zsh's library.
@@ -146,9 +155,6 @@ docker.exec(){
 }
 docker.run(){
     docker run $@
-}
-docker.rm(){
-    docker rm -f $1
 }
 docker.rm(){
     docker rm -f $1
