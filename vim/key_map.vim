@@ -44,7 +44,7 @@ nmap <silent> <M-m>l     :call LListToggle()<CR>
 nmap <silent> <M-m><M-l> :call LListToggle()<CR>
 nmap <silent> <M-m>q     :call QListToggle()<CR>
 nmap <silent> <M-m><M-q> :call QListToggle()<CR>
-	
+
 if ! has('nvim')
     noremap I 10<Up>
     noremap J <Home>
@@ -78,16 +78,16 @@ map <M-m><M-m> :LAg<CR>
 "Edit keys
 """""""""""""""""""""""""""""""""""""
 " Copy
-vnoremap <M-u> "ayi
-nnoremap yy    "ayy
+vnoremap <M-u> "+yi
+nnoremap yy    "+yy
 
 "Paste mode
 nnoremap <M-p> :set invpaste paste?<CR>
 set pastetoggle=<M-p>
 set showmode
 " Paste
-inoremap <M-o> <Left><C-o>"ap
-nnoremap <M-o> "ap
+inoremap <M-o> <Left><C-o>"+p
+nnoremap <M-o> "+p
 
 " Backspace
 noremap  <M-d> d<Left>i
@@ -204,7 +204,7 @@ map <silent> <F4>       :TagbarToggle <CR>
 
 
 "On/Off spell check
-nnoremap <F7>            :set spell! spell?<CR> 
+nnoremap <F7>            :set spell! spell?<CR>
 inoremap <F7>            <C-o>:set spell! spell?<CR>
 " Spell suggestions
 inoremap <M-n> <C-x>s
@@ -215,7 +215,7 @@ nnoremap <F8>            :noh<CR>
 inoremap <F8>            <C-o>:noh<CR>
 
 "build of cscope DB
-map <silent> <F11>  :cs reset <CR> 
+map <silent> <F11>  :cs reset <CR>
 map <silent> <F12>  :! ~/dotFiles/vim/cscope_build.py <CR> :cs reset<CR>
 
 "save file
@@ -224,11 +224,54 @@ inoremap <silent> <M-s>     <ESC>:w! <CR>
 inoremap <silent> <Insert>  <ESC>
 
 inoremap <expr><tab>  pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Coc Keypams
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Remap keys for gotos
+nmap <silent> <M-m><M-d> <Plug>(coc-definition)
+nmap <silent> <M-m><M-o> <Plug>(coc-type-definition)
+nmap <silent> <M-m><M-i> <Plug>(coc-implementation)
+nmap <silent> <M-m><M-r> <Plug>(coc-references)
+" Use H to show documentation in preview window
+nnoremap <silent> H :call <SID>show_documentation()<CR>
 
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+" Remap for rename current word
+nmap <silent> <space>r <Plug>(coc-rename)
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>e  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>E  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>q  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>S  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+"nnoremap <silent> <space>n  :<C-u>CocNext<CR>
+" Do default action for previous item.
+"nnoremap <silent> <space>N  :<C-u>CocPrev<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:lt_location_list_toggle_map = '<Leader>l'
 let g:lt_quickfix_list_toggle_map = '<Leader>q'
-    
+
 let g:pymode_breakpoint_key = '<leader>b'
 let g:pymode_run_bind       = '<leader>r'
 
@@ -255,27 +298,27 @@ let g:jedi#rename_command = '<leader>r'
 let g:jedi#usages_command = '<leader>]'
 let g:sparkupNextMapping='<c-l>'
 
-" Haskell 
+" Haskell
 au FileType haskell nnoremap <buffer> <F1> :HdevtoolsInfo<CR>
 au FileType haskell nnoremap <buffer> <F5> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <F4> :HdevtoolsClear<CR>
-" C and C++ 
+" C and C++
 augroup c_cpp_autocmds
     autocmd!
     " s: Find this C symbol
     autocmd FileType c,cpp map <silent> <M-m>s  :call CscopeFind('s', expand('<cword>'), 'n')<CR>
     " g: Find this definition
     autocmd FileType c,cpp map <silent> <M-m>g  :call CscopeFind('g', expand('<cword>'), 'n')<CR>
-    " d: Find functions called by this function
-    autocmd FileType c,cpp map <silent> <M-m>d  :call CscopeFind('d', expand('<cword>'), 'n')<CR>
+    " f: Find functions called by this function
+    autocmd FileType c,cpp map <silent> <M-m>f  :call CscopeFind('d', expand('<cword>'), 'n')<CR>
     " c: Find functions calling this function
     autocmd FileType c,cpp map <silent> <M-m>c  :call CscopeFind('c', expand('<cword>'), 'n')<CR>
     " t: Find this text string
     autocmd FileType c,cpp map <silent> <M-m>t  :call CscopeFind('t', expand('<cword>'), 'n')<CR>
     " e: Find this egrep pattern
     autocmd FileType c,cpp map <silent> <M-m>e  :call CscopeFind('e', expand('<cword>'), 'n')<CR>
-    " f: Find this file
-    autocmd FileType c,cpp map <silent> <M-m>f  :call CscopeFind('f', expand('<cword>'), 'n')<CR>
-    " i: Find files #including this file
-    autocmd FileType c,cpp map <silent> <M-m>i  :call CscopeFind('i', expand('<cword>'), 'n')<CR>
+    " F: Find this file
+    autocmd FileType c,cpp map <silent> <M-m>F  :call CscopeFind('f', expand('<cword>'), 'n')<CR>
+    " I: Find files #including this file
+    autocmd FileType c,cpp map <silent> <M-m>I  :call CscopeFind('i', expand('<cword>'), 'n')<CR>
 augroup END

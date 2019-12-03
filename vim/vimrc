@@ -1,10 +1,10 @@
-" author: Werner Fink       <werner@suse.de> 
-" author: Florian La Roche  <florian@suse.de> 
+" author: Werner Fink       <werner@suse.de>
+" author: Florian La Roche  <florian@suse.de>
 " version: 00/01/20
 " commented lines start with `"'
 
 " get easier to use and more user friendly vim defaults
-" CAUTION: This option breaks some vi compatibility. 
+" CAUTION: This option breaks some vi compatibility.
 "          Switch it off if you prefer real vi compatibility
 set nocompatible              " be iMproved, required
 
@@ -35,19 +35,19 @@ if ! has('nvim')
     set esckeys
 endif
 
-" allow backspacing over everything in insert mode 
+" allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
 set hlsearch
 
 " Enable mouse usage (all modes)
-set mouse=nic        
+set mouse=nic
 
 " Do smart case matching
 set smartcase
 
 " Incremental search
-set incsearch 
+set incsearch
 
 " Disable swap file creation
 set noswapfile
@@ -58,9 +58,29 @@ set nowrap
 set timeoutlen=1000 ttimeoutlen=0
 
 set t_Co=256
-    
+
 " replace tab with spaces
 set expandtab
+
+set hidden
+" if hidden is not set, TextEdit might fail.
+set hidden
+
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Better display for messages
+set cmdheight=2
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
 
 set tabstop=4
 
@@ -76,6 +96,7 @@ set ai
 let mapleader = "a"
 " C-style indent
 set cin
+set clipboard=unnamedplus
 " Case sensitive search
 "set noic
 " Fix cursor on center
@@ -107,6 +128,19 @@ so ~/dotFiles/vim/plugin_setup.vim
 
 " disable tabs replacement for the specified filetypes
 au FileType crontab,fstab,make set noexpandtab tabstop=8 shiftwidth=8
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 augroup vimrc_autocmds
     autocmd!
@@ -142,7 +176,8 @@ autocmd FileType css setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
 
 " --- YUML ---
 autocmd FileType yml,yaml setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-"/etc/vimrc ends here
+
+autocmd BufWritePre * execute '%s/\s\+$//e'
 
 if filereadable("./.vimrc_local")
     so ./.vimrc_local

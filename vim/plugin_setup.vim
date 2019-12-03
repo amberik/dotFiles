@@ -5,7 +5,7 @@
 so ~/dotFiles/vim/cscope_maps.vim
 
 let g:ag_lhandler="rightbelow lw"
-    
+
 let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {'python':['flake8'], 'cpp':[], 'c':[]}
@@ -17,7 +17,6 @@ let g:ale_echo_msg_warning_str = 'Warning'
 let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
 
-let g:NERDTreeBookmarksFile = expand('%:p:h')."/.BookMarks"
 
 set laststatus=2
 let g:airline_theme='badwolf'
@@ -33,7 +32,7 @@ let Tlist_Sort_Type = "name"
 "=====================================================
 " Python-mode settings
 "=====================================================
-" Disable python code auto complete (will use jedi-vim) 
+" Disable python code auto complete (will use jedi-vim)
 let g:pymode_rope = 0
 let g:pymode_rope_completion = 0
 let g:pymode_rope_complete_on_dot = 0
@@ -57,11 +56,16 @@ let g:pymode_run_bind = '<leader>r'
 let g:pymode_doc = 0
 let g:pymode_doc_bind = ''
 
+
+
+"=====================================================
+" Deoplete autocomplete settings
+"=====================================================
 " deoplete options
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 "" disable autocomplete by default
-let b:deoplete_disable_auto_complete=1 
+let b:deoplete_disable_auto_complete=1
 let g:deoplete_disable_auto_complete=1
 "call deoplete#custom#buffer_option('auto_complete', v:false)
 
@@ -83,7 +87,9 @@ let g:deoplete#sources.cpp = ['LanguageClient']
 let g:deoplete#sources.c = ['LanguageClient']
 "let g:deoplete#sources.haskell = ['LanguageClient']
 let g:deoplete#sources.vim = ['vim']
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <m-b> coc#refresh()
 
 " ------------------------------------------------------------------------------
 " Haskell
@@ -93,19 +99,9 @@ let g:hoogle_search_count = 100
 "let g:haskellmode_completion_ghc = 0
 "autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
-" ------------------------------------------------------------------------------
-" JEDI settings
-" ------------------------------------------------------------------------------
-"set splitbelow
-let g:jedi#popup_select_first = 1
-let g:jedi#show_call_signatures = 0
-let g:jedi#auto_close_doc = 1
-
 let html_no_rendering=1
 let g:closetag_default_xml=1
 
-let g:ConqueTerm_StartMessages = 0
-let g:ConqueTerm_CloseOnEnd = 0
 let g:indentLine_color_term = 236
 let g:indentLine_char = '┋'
 " ------------------------------------------------------------------------------
@@ -113,4 +109,26 @@ let g:indentLine_char = '┋'
 " ------------------------------------------------------------------------------
 let g:tmux_navigator_disable_when_zoomed = 1
 let g:tmux_navigator_no_mappings = 1
+" ------------------------------------------------------------------------------
+" NERDTree
+" ------------------------------------------------------------------------------
+let g:NERDTreeBookmarksFile = expand('%:p:h')."/.BookMarks"
+let g:NERDTreeUpdateOnCursorHold = 0
+"let g:NERDTreeGitStatusWithFlags = 1
+" sync open file with NERDTree
+" " Check if NERDTree is open or active
+function! IsNERDTreeOpen()
+  return exists("t:NERDTreeBufName") && (bufwinnr("t:NERDTreeBufName") != -1)
+endfunction
+" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+" file, and we're not in vimdiff
+function! SyncTree()
+  if &modifiable && !&diff && strlen(expand('%')) > 0 && IsNERDTreeOpen()
+    "NERDTreeFind
+    wincmd p
+  endif
+endfunction
+
+" Highlight currently open buffer in NERDTree
+autocmd BufEnter * call SyncTree()
 

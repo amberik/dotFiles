@@ -17,7 +17,7 @@ export cabal_helper_libexecdir=$CABALROOT/x86_64-linux-ghc-8.0.2/cabal-helper-0.
 export DEVEL_DIR=~/devel/
 
 
-export VISUAL='nvim' 
+export VISUAL='nvim'
 export CSHEDIT="$VISUAL"
 export EDITOR="$VISUAL"
 export NO_AWT_MITSHM=true
@@ -27,16 +27,16 @@ then
     export TERM=xterm-256color
 fi
 
-autoload -Uz promptinit                                                                                                                                      
-autoload -U colors && colors                                                                                                                                 
-promptinit                                                                                                                                                   
-                                                                                                                                                             
-autoload -U select-word-style                                                                                                                                
-select-word-style bash                                                                                                                                      
+autoload -Uz promptinit
+autoload -U colors && colors
+promptinit
 
-#Keep 1000 lines of history within the shell and save it to ~/.zsh_history: 
-HISTSIZE=10000                                                               
-SAVEHIST=10000                                                               
+autoload -U select-word-style
+select-word-style bash
+
+#Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
 source ~/antigen.zsh
@@ -55,26 +55,26 @@ antigen theme gnzh
 # Tell antigen that you're done.
 antigen apply
 
-alias ls='ls --color=auto'                                                   
-alias la='ls -A'                                                             
+alias ls='ls --color=auto'
+alias la='ls -A'
 alias l='ls -lah'
 alias ps='ps auxf'
-alias grep='grep --color -n'                                             
+alias grep='grep --color -n'
 alias df='df -h'
 alias vim='nvim'
 alias todo='nvim ~/TODO_Items'
-alias t='tree -h' 
-alias tf='tree -f' 
+alias t='tree -h'
+alias tf='tree -f'
 alias ta='tree -ha'
 alias df='findmnt'
 
 
-# Use modern completion system                                                                        
-autoload -Uz compinit                                                                                 
+# Use modern completion system
+autoload -Uz compinit
 
 # Key maping:
 # Help:
-#   type bindkey in zsh shell and you'll see list of bound 
+#   type bindkey in zsh shell and you'll see list of bound
 #   keys.
 bindkey "^[l" forward-char
 bindkey "^[j" backward-char
@@ -83,7 +83,7 @@ bindkey "^[k" down-line-or-search
 bindkey "^[L" forward-word
 bindkey "^[J" backward-word
 bindkey "^[f" delete-char
-bindkey "^[d" backward-delete-char                                                           
+bindkey "^[d" backward-delete-char
 
 
 ## NET ###############################################################
@@ -132,7 +132,7 @@ tools.mount_tree(){
     findmnt
 }
 tools.ssh.get_pub_key(){
-    local ssh_pub_key_file=~/.ssh/id_rsa.pub 
+    local ssh_pub_key_file=~/.ssh/id_rsa.pub
     if ! [[ -f $ssh_pub_key_file ]]; then
         ssh-keygen -t rsa -b 4096
         eval "$(ssh-agent -s)"
@@ -173,14 +173,14 @@ docker.images(){
 }
 ## TensorFlow Ddcker ####################################################
 TF_CONTAINER=tensorflow
-tf.docker.run() {                                                                                    
-    local TAG=nightly-py3-jupyter                                                                    
-    local SOURCEDIR=$(realpath $DEVEL_DIR)/tensor_flow/src                                           
-    local SHAREDIR=$(realpath $DEVEL_DIR)/tensor_flow/share                                          
-    if [ ! "$(docker ps -q -f name=$TF_CONTAINER)" ]; then                                           
-        if [ ! "$(docker ps -aq -f status=exited -f name=$TF_CONTAINER)" ]; then                     
-            tf.docker.update                                                                         
-            mkdir -p $SOURCEDIR $SHAREDIR                                                            
+tf.docker.run() {
+    local TAG=nightly-py3-jupyter
+    local SOURCEDIR=$(realpath $DEVEL_DIR)/tensor_flow/src
+    local SHAREDIR=$(realpath $DEVEL_DIR)/tensor_flow/share
+    if [ ! "$(docker ps -q -f name=$TF_CONTAINER)" ]; then
+        if [ ! "$(docker ps -aq -f status=exited -f name=$TF_CONTAINER)" ]; then
+            tf.docker.update
+            mkdir -p $SOURCEDIR $SHAREDIR
             docker.run -d \
                 -u $(id -u):$(id -g) \
                 -v $SOURCEDIR:/tf/src \
@@ -192,49 +192,51 @@ tf.docker.run() {
                 --device /dev/snd \
                 --ipc host \
                 --name $TF_CONTAINER \
-                tensorflow/$TF_CONTAINER:$TAG /bin/sh -c "while true; do sleep 1000000; done"     
-        else                                                                                         
-            tf.docker.start                                                                          
-        fi                                                                                           
-    fi                                                                                               
-}                                                                                                    
-###################################################################################################  
-tf.docker.exec() {                                                                                   
-    if [ ! "$(docker ps -q -f name=$TF_CONTAINER)" ]; then                                           
-        tf.docker.run                                                                                
-    fi                                                                                               
-    docker.exec $TF_CONTAINER $@                                                                     
-}                                                                                                    
-tf.docker.jupyter() {                                                                                   
-    tf.docker.exec bash -c "jupyter-notebook --ip $(docker.ip $TF_CONTAINER)"                                                        
-}                                                                                                    
-#################################################################                                    
-tf.docker.update() {                                                                                 
-    local TAG=nightly-py3-jupyter                                                                    
-    docker.pull tensorflow/$TF_CONTAINER:$TAG                                                        
-}                                                                                                    
-#################################################################                                    
-tf.docker.start() {                                                                                  
-    docker.start $TF_CONTAINER                                                                       
-}                                                                                                    
-#################################################################                                    
-tf.docker.stop() {                                                                                   
-    docker.stop $TF_CONTAINER                                                                        
-}                                                                                                    
-#################################################################                                    
-tf.docker.rm() {                                                                                     
-    docker.rm $TF_CONTAINER                                                                          
-}                                                                                                    
+                tensorflow/$TF_CONTAINER:$TAG /bin/sh -c "while true; do sleep 1000000; done"
+        else
+            tf.docker.start
+        fi
+    fi
+}
+###################################################################################################
+tf.docker.exec() {
+    if [ ! "$(docker ps -q -f name=$TF_CONTAINER)" ]; then
+        tf.docker.run
+    fi
+    docker.exec $TF_CONTAINER $@
+}
+tf.docker.jupyter() {
+    tf.docker.exec bash -c "jupyter-notebook --ip $(docker.ip $TF_CONTAINER)"
+}
+#################################################################
+tf.docker.update() {
+    local TAG=nightly-py3-jupyter
+    docker.pull tensorflow/$TF_CONTAINER:$TAG
+}
+#################################################################
+tf.docker.start() {
+    docker.start $TF_CONTAINER
+}
+#################################################################
+tf.docker.stop() {
+    docker.stop $TF_CONTAINER
+}
+#################################################################
+tf.docker.rm() {
+    docker.rm $TF_CONTAINER
+}
 ## CONFIG ###############################################################
 config.zsh.common(){
     tools.editor ~/.zshrc
+    . ~/.zshrc
 }
 config.zsh.local(){
-    tools.editor ~/.zshrc_custom.zsh    
+    tools.editor ~/.zshrc_custom.zsh
+    . ~/.zshrc_custom.zsh
 }
 config.ntfy(){
     mkdir -p ~/.config/ntfy/
-    tools.editor .config/ntfy/ntfy.yml    
+    tools.editor .config/ntfy/ntfy.yml
 }
 config.tmux(){
     tools.editor ~/.tmux.conf
