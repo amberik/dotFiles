@@ -106,6 +106,15 @@ host.memo.swap.off(){
 host.memo.swap.on(){
     sudo swapon -a
 }
+host.setup(){
+    sudo apt update
+    sudo apt install -y python3-pip cgdb heaptrack heaptrack-gui
+    #pip2 install ipython jupyter matplotlib ipywidgets opencv-python pythreejs Pillow tensorflow
+    pip3 install ipython jupyter matplotlib ipywidgets opencv-python pythreejs Pillow tensorflow gdbgui
+    jupyter nbextension enable --py widgetsnbextension
+    jupyter nbextension install --py --symlink --user pythreejs
+    jupyter nbextension enable pythreejs --user --py
+}
 ## TOOLS ###############################################################
 tools.top(){
     htop $@
@@ -113,20 +122,30 @@ tools.top(){
 tools.editor(){
     vim $@
 }
+tools.perf(){
+    local perf_event_paranoid_val=$(cat /proc/sys/kernel/perf_event_paranoid)
+    if [ "$perf_event_paranoid_val" != "-1" ]
+    then
+      echo -1 | sudo  tee /proc/sys/kernel/perf_event_paranoid
+    fi
+    sudo perf $@
+}
 tools.notify(){
-    ntfy $@
+    local TITLE=$1
+    shift
+    ntfy -t ${TITLE:q} send "$@"
 }
 tools.notify.info(){
-    tools.notify -t "Info:" send "$@"
+    tools.notify -t "Info:"  "$@"
 }
 tools.notify.message(){
-    tools.notify -t "Message:" send "$@"
+    tools.notify "Message:" "$@"
 }
 tools.notify.failed(){
-    tools.notify -t "Failed:"  send "$@"
+    tools.notify "Failed:" "$@"
 }
 tools.notify.success(){
-    tools.notify -t "Success:" send "$@"
+    tools.notify "Success:" "$@"
 }
 tools.mount_tree(){
     findmnt
@@ -228,7 +247,6 @@ tf.docker.rm() {
 ## CONFIG ###############################################################
 config.zsh.common(){
     tools.editor ~/.zshrc
-    . ~/.zshrc
 }
 config.zsh.local(){
     tools.editor ~/.zshrc_custom.zsh

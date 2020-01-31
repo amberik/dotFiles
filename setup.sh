@@ -1,8 +1,9 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/" 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/"
 
-sudo apt -y install python python3 gcc git curl wget ipython python-pip python3-pip neovim ghc tmux zsh fonts-hack silversearcher-ag tree npm
+sudo apt update
+sudo apt -y install python python3 gcc git curl wget ipython python-pip python3-pip neovim ghc tmux zsh fonts-hack silversearcher-ag tree npm yarn
 pip2 install neovim ntfy
 pip3 install neovim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -12,7 +13,7 @@ then
 fi
 
 updateConfigFile () {
-    sourceConfigFile=$1 
+    sourceConfigFile=$1
     configFile=$2
     echo "Remove the file: $configFile"
     rm "$configFile"
@@ -28,6 +29,6 @@ updateConfigFile ./git/gitconfig ~/.gitconfig
 ln -s ~/.vim ~/.config/nvim
 updateConfigFile ./vim/vimrc ~/.config/nvim/init.vim
 
-# Haskel 
+# Haskel
 curl -sSL https://get.haskellstack.org/ | sh
 stack install hsimport hdevtools
