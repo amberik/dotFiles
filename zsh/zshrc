@@ -7,8 +7,10 @@ export USER_LD_LIBRARY_PATH=$HOME/.local/lib/
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/:$USER_LD_LIBRARY_PATH
 export PATH=$PATH:/usr/local/sbin:/usr/sbin:$USER_PATH
 # Go language
-export GOROOT=$HOME/go1.X
+export GOROOT=/usr/lib/go
 export PATH=$PATH:$GOROOT/bin/
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin/
 # Haskell language
 export CABALROOT=$HOME/.cabal
 export PATH=$PATH:$CABALROOT/bin/
@@ -63,10 +65,13 @@ alias grep='grep --color -n'
 alias df='df -h'
 alias vim='nvim'
 alias todo='nvim ~/TODO_Items'
+alias usefull='nvim ~/USEFULL_Items'
+alias notes='nvim ~/MyNotes'
 alias t='tree -h'
 alias tf='tree -f'
 alias ta='tree -ha'
 alias df='findmnt'
+alias df='less -FRSX'
 
 
 # Use modern completion system
@@ -278,5 +283,97 @@ config.deply.setup(){
     tools.editor ~/dotFiles/setup.sh
 }
 
-source ~/.zshrc_custom.zsh
 
+################################################################################################
+# FZF
+################################################################################################
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_ALT_R_OPTS="--preview 'tree -C {} | head -200'"
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --bind alt-k:down,alt-i:up'
+export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+#Command history
+fh() {
+  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -r 's/ *[0-9]*\*? *//' | sed -r 's/\\/\\\\/g')
+}
+
+# fuzzy grep open via ag with line number
+vg() {
+  local file
+  local line
+
+  read -r file line <<<"$(ag --nobreak --noheading $@ | fzf -0 -1 | awk -F: '{print $1, $2}')"
+
+  if [[ -n $file ]]
+  then
+     vim $file +$line
+  fi
+}
+
+
+
+fkill() {
+    local pid
+    if [ "$UID" != "0" ]; then
+        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+    else
+        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+    fi
+
+    if [ "x$pid" != "x" ]
+    then
+        echo $pid | xargs kill -${1:-9}
+    fi
+}
+
+
+# fbr - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
+fbr() {
+  local branches branch
+  branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
+  branch=$(echo "$branches" |
+           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
+
+# fco - checkout git branch/tag
+fco() {
+  local tags branches target
+  branches=$(
+    git --no-pager branch --all \
+      --format="%(if)%(HEAD)%(then)%(else)%(if:equals=HEAD)%(refname:strip=3)%(then)%(else)%1B[0;34;1mbranch%09%1B[m%(refname:short)%(end)%(end)" \
+    | sed '/^$/d') || return
+  tags=$(
+    git --no-pager tag | awk '{print "\x1b[35;1mtag\x1b[m\t" $1}') || return
+  target=$(
+    (echo "$branches"; echo "$tags") |
+    fzf --no-hscroll --no-multi -n 2 \
+        --ansi) || return
+  git checkout $(awk '{print $2}' <<<"$target" )
+}
+
+
+# fco_preview - checkout git branch/tag, with a preview showing the commits between the tag/branch and HEAD
+fco_preview() {
+  local tags branches target
+  branches=$(
+    git --no-pager branch --all \
+      --format="%(if)%(HEAD)%(then)%(else)%(if:equals=HEAD)%(refname:strip=3)%(then)%(else)%1B[0;34;1mbranch%09%1B[m%(refname:short)%(end)%(end)" \
+    | sed '/^$/d') || return
+  tags=$(
+    git --no-pager tag | awk '{print "\x1b[35;1mtag\x1b[m\t" $1}') || return
+  target=$(
+    (echo "$branches"; echo "$tags") |
+    fzf --no-hscroll --no-multi -n 2 \
+        --ansi --preview="git --no-pager log -150 --pretty=format:%s '..{2}'") || return
+  git checkout $(awk '{print $2}' <<<"$target" )
+}
+
+# fcoc - checkout git commit
+fcoc() {
+  local commits commit
+  commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
+  commit=$(echo "$commits" | fzf --tac +s +m -e) &&
+  git checkout $(echo "$commit" | sed "s/ .*//")
+}
+
+source ~/.zshrc_custom.zsh

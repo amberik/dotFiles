@@ -26,7 +26,7 @@ call vundle#begin()
     "Plugin 'garbas/vim-snipmate'            " Snippets manager
     Plugin 'mitsuhiko/vim-jinja'            " Jinja support for vim
     Plugin 'eagletmt/neco-ghc'
-    Plugin 'Shougo/deoplete.nvim'
+    "Plugin 'Shougo/deoplete.nvim'
     Plugin 'Hoogle'
     Plugin 'neovimhaskell/haskell-vim'
     Plugin 'bitc/vim-hdevtools'
@@ -39,4 +39,6 @@ call vundle#begin()
     Plugin 'airblade/vim-gitgutter'
     Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
     Plugin 'Xuyuanp/nerdtree-git-plugin'
+    Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plugin 'junegunn/fzf.vim'
 call vundle#end()                    " required
