@@ -12,10 +12,10 @@ call vundle#begin()
     Plugin 'rking/ag.vim'
     Plugin 'haskell.vim'
     Plugin 'jszakmeister/vim-togglecursor'
-    Plugin 'w0rp/ale'
+    "Plugin 'w0rp/ale'
     Plugin 'easymotion/vim-easymotion'
     Plugin 'Valloric/ListToggle'
-    Plugin 'scrooloose/nerdtree'           " Project and file navigation
+    "Plugin 'scrooloose/nerdtree'           " Project and file navigation
     Plugin 'majutsushi/tagbar'             " Class/module browser
     Plugin 'bling/vim-airline'              " Lean & mean status/tabline for vim
     Plugin 'fisadev/FixedTaskList.vim'      " Pending tasks list
@@ -27,18 +27,18 @@ call vundle#begin()
     Plugin 'mitsuhiko/vim-jinja'            " Jinja support for vim
     Plugin 'eagletmt/neco-ghc'
     "Plugin 'Shougo/deoplete.nvim'
-    Plugin 'Hoogle'
-    Plugin 'neovimhaskell/haskell-vim'
-    Plugin 'bitc/vim-hdevtools'
+    "Plugin 'Hoogle'
+    "Plugin 'neovimhaskell/haskell-vim'
+    "Plugin 'bitc/vim-hdevtools'
     "Plugin 'davidhalter/jedi-vim'           " Jedi-vim autocomplete plugin
     Plugin 'christoomey/vim-tmux-navigator'
     "Plugin 'honza/vim-snippets'             " snippets repo
     "Plugin 'ryanoasis/vim-devicons'
-    Plugin 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
-    Plugin 'neoclide/coc.nvim', {'branch': 'release'}
+    "Plugin 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
+    "Plugin 'neoclide/coc.nvim', {'branch': 'release'}
     Plugin 'airblade/vim-gitgutter'
     Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
     Plugin 'Xuyuanp/nerdtree-git-plugin'
-    Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
-    Plugin 'junegunn/fzf.vim'
+    "Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    "Plugin 'junegunn/fzf.vim'
 call vundle#end()                    " required

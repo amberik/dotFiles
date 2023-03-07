@@ -24,3 +24,4 @@
 	rebase = true
 [core]
 	excludesfile = /home/sergei/.gitignore
+	sshCommand = ssh -i ~/.ssh/id_pexip_github -F /dev/null

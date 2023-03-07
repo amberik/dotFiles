@@ -89,21 +89,21 @@ let g:deoplete#sources.c = ['LanguageClient']
 let g:deoplete#sources.vim = ['vim']
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <m-b> coc#refresh()
+"inoremap <silent><expr> <m-b> coc#refresh()
 
 " ------------------------------------------------------------------------------
 " Haskell
 " ------------------------------------------------------------------------------
 
-let g:hoogle_search_count = 100
+"let g:hoogle_search_count = 100
 "let g:haskellmode_completion_ghc = 0
 "autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
-let html_no_rendering=1
-let g:closetag_default_xml=1
+"let html_no_rendering=1
+"let g:closetag_default_xml=1
 
-let g:indentLine_color_term = 236
-let g:indentLine_char = '┋'
+"let g:indentLine_color_term = 236
+"let g:indentLine_char = '┋'
 " ------------------------------------------------------------------------------
 " TMUX integration
 " ------------------------------------------------------------------------------
